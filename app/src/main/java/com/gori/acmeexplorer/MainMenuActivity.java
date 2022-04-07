@@ -11,7 +11,7 @@ import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity {
     private ArrayList<MenuItem> menuItems;
 
     @Override

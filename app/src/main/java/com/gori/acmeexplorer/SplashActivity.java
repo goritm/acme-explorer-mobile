@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class SplashActivity extends AppCompatActivity {
-
     private final int SPLASH_DURATION = 1000;
 
     @Override
@@ -17,7 +16,7 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(new Runnable() {
             public void run(){
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
                 startActivity(intent);
                 finish();
             }

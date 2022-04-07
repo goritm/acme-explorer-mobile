@@ -1,15 +1,17 @@
 package com.gori.acmeexplorer.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.TripListActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;
@@ -40,21 +42,23 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
             view.setOnClickListener(this);
 
-            imageView = view.findViewById(R.id.itemMenu_image);
-            textView = view.findViewById(R.id.itemMenu_text);
+            imageView = view.findViewById(R.id.trip_image);
+            textView = view.findViewById(R.id.trip_cities);
         }
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "position = " + getLayoutPosition(), Toast.LENGTH_SHORT).show();
+            Intent intent = null;
 
-            if(getLayoutPosition()==0){
-                Toast.makeText(view.getContext(), "equis", Toast.LENGTH_SHORT).show();
-
-            }else if(getLayoutPosition()==1){
-                Toast.makeText(view.getContext(), "de", Toast.LENGTH_SHORT).show();
-
+            if(getLayoutPosition() == 0) {
+                Snackbar.make(view, "Vamos a viajes disponibles", Snackbar.LENGTH_SHORT).show();
+                intent = new Intent(view.getContext(), TripListActivity.class);
+            } else if(getLayoutPosition() == 1) {
+                Snackbar.make(view, "Vamos a viajes seleccionados", Snackbar.LENGTH_SHORT).show();
+                intent = new Intent(view.getContext(), TripListActivity.class);
             }
+
+            view.getContext().startActivity(intent);
         }
 
         private TextView getTextView() {
@@ -71,7 +75,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.main_menu_list, viewGroup, false);
+                .inflate(R.layout.menu_item, viewGroup, false);
 
         return new ViewHolder(view);
     }
