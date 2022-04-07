@@ -25,9 +25,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final ImageView imageView;
+        private final ImageView imageView, selectedIcon;
         private final TextView textViewCities, textViewPrice, textViewDates;
-        private final Button button;
 
         public ViewHolder(View view){
             super(view);
@@ -35,10 +34,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             view.setOnClickListener(this);
 
             imageView = view.findViewById(R.id.trip_image);
+            selectedIcon = view.findViewById(R.id.selectedIcon);
             textViewCities = view.findViewById(R.id.trip_cities);
             textViewPrice = view.findViewById(R.id.trip_price);
             textViewDates = view.findViewById(R.id.trip_dates);
-            button = view.findViewById(R.id.select_button);
         }
 
         @Override
@@ -53,6 +52,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             return imageView;
         };
 
+        public ImageView getSelectedIcon() {
+            return selectedIcon;
+        }
+
         public TextView getTextViewCities() {
             return textViewCities;
         }
@@ -63,10 +66,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
         public TextView getTextViewDates() {
             return textViewDates;
-        }
-
-        public Button getButton() {
-            return button;
         }
     }
 
@@ -86,8 +85,14 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
         viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
         viewHolder.getTextViewDates().setText(trip.getStartDate()  + " - " + trip.getEndDate());
-        viewHolder.getButton().setOnClickListener(view -> {
+        viewHolder.getSelectedIcon().setOnClickListener(view -> {
             trip.setSelected(!trip.getSelected());
+
+            if(trip.getSelected()) {
+                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_selected);
+            } else {
+                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_not_selected);
+            }
         });
     }
 
