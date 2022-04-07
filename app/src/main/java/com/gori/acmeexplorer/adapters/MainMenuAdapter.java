@@ -51,10 +51,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             Intent intent = null;
 
             if(getLayoutPosition() == 0) {
-                Snackbar.make(view, "Vamos a viajes disponibles", Snackbar.LENGTH_SHORT).show();
                 intent = new Intent(view.getContext(), TripListActivity.class);
             } else if(getLayoutPosition() == 1) {
-                Snackbar.make(view, "Vamos a viajes seleccionados", Snackbar.LENGTH_SHORT).show();
                 intent = new Intent(view.getContext(), TripListActivity.class);
             }
 

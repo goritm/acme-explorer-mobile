@@ -1,10 +1,11 @@
 package com.gori.acmeexplorer.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Trip {
+public class Trip implements Serializable {
     private String startCity;
     private String endCity;
     private BigDecimal price;

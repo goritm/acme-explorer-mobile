@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.TripDetailActivity;
 import com.gori.acmeexplorer.models.Trip;
 import com.squareup.picasso.Picasso;
 
@@ -42,9 +43,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            for(int i = 0; i < localDataSet.size(); i++){
-                Snackbar.make(view, "position " + getLayoutPosition(), Snackbar.LENGTH_SHORT).show();
-            }
+            Intent intent = new Intent(view.getContext(), TripDetailActivity.class);
+            Trip trip = localDataSet.get(getLayoutPosition());
+            intent.putExtra("trip", trip);
+            view.getContext().startActivity(intent);
         }
 
         private ImageView getImageView() {
@@ -85,7 +87,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
         viewHolder.getTextViewDates().setText(trip.getStartDate()  + " - " + trip.getEndDate());
         viewHolder.getButton().setOnClickListener(view -> {
-            Snackbar.make(view, "sex " + position, Snackbar.LENGTH_SHORT).show();
+            trip.setSelected(!trip.getSelected());
         });
     }
 
