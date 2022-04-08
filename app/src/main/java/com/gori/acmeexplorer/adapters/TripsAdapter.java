@@ -23,6 +23,11 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         this.mOnTripListener = onTripListener;
     }
 
+    public interface OnTripListener {
+        void onTripClick(int position);
+        void onSelectTrip(int position);
+    }
+
     @Override
     public int getItemCount() {
         return localDataSet.size();
@@ -40,19 +45,18 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Trip trip = localDataSet.get(position);
 
+        viewHolder.bindView(position, mOnTripListener);
+
         Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).into(viewHolder.getImageView());
         viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
         viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
         viewHolder.getTextViewDates().setText(trip.getStartDate()  + " - " + trip.getEndDate());
-        viewHolder.getSelectedIcon().setOnClickListener(view -> {
-            trip.setSelected(!trip.getSelected());
 
-            if(trip.getSelected()) {
-                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_selected);
-            } else {
-                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_not_selected);
-            }
-        });
+        if(trip.getSelected()) {
+            viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_selected);
+        } else {
+            viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_not_selected);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,6 +84,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             onTripListener.onTripClick(getAdapterPosition());
         }
 
+        public void bindView(int position, OnTripListener onTripListener) {
+                selectedIcon.setOnClickListener(v -> onTripListener.onSelectTrip(getAdapterPosition()));
+        }
+
         private ImageView getImageView() {
             return imageView;
         };
@@ -99,9 +107,5 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         public TextView getTextViewDates() {
             return textViewDates;
         }
-    }
-
-    public interface OnTripListener {
-        void onTripClick(int position);
     }
 }

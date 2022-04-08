@@ -51,12 +51,6 @@ public class TripDetailActivity extends AppCompatActivity {
 
         ivIcon.setOnClickListener(view -> {
             trip.setSelected(!trip.getSelected());
-
-            if(trip.getSelected()) {
-                ivIcon.setImageResource(R.drawable.ic_selected);
-            } else {
-                ivIcon.setImageResource(R.drawable.ic_not_selected);
-            }
         });
     }
 }
