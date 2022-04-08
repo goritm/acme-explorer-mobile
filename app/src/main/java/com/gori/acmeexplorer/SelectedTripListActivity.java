@@ -16,7 +16,7 @@ import com.gori.acmeexplorer.models.Trip;
 
 import java.util.ArrayList;
 
-public class SelectedTripListActivity extends AppCompatActivity {
+public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     public ArrayList<Trip> selectedTrips;
 
     @Override
@@ -26,10 +26,17 @@ public class SelectedTripListActivity extends AppCompatActivity {
 
         RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
 
-        TripsAdapter tripsAdapter = new TripsAdapter(selectedTrips);
+        TripsAdapter tripsAdapter = new TripsAdapter(selectedTrips, this);
         rvSelectedTripList.setAdapter(tripsAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
+    }
+
+    @Override
+    public void onTripClick(int position) {
+        Intent intent = new Intent(this, SelectedTripListActivity.class);
+        intent.putExtra("trip", selectedTrips.get(position));
+        startActivity(intent);
     }
 }

@@ -20,28 +20,27 @@ import com.gori.acmeexplorer.models.Trip;
 
 import java.util.ArrayList;
 
-public class TripListActivity extends AppCompatActivity {
+public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
     private Switch switchColumns;
     private Button filterButton;
-    private GridLayoutManager gridLayoutManager;
     private TripsAdapter tripsAdapter;
+    private RecyclerView rvTripList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
 
-        RecyclerView rvTripList = findViewById(R.id.rvTripList);
-
+        rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
 
         trips = Trip.createTripsList();
-        tripsAdapter = new TripsAdapter(trips);
+        tripsAdapter = new TripsAdapter(trips, this);
         rvTripList.setAdapter(tripsAdapter);
 
-        gridLayoutManager = new GridLayoutManager(this, 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         rvTripList.setLayoutManager(gridLayoutManager);
 
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -70,4 +69,11 @@ public class TripListActivity extends AppCompatActivity {
                     Intent data = result.getData();
                 }
             });
+
+    @Override
+    public void onTripClick(int position) {
+        Intent intent = new Intent(this, TripDetailActivity.class);
+        intent.putExtra("trip", trips.get(position));
+        startActivity(intent);
+    }
 }
