@@ -1,12 +1,15 @@
 package com.gori.acmeexplorer.adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gori.acmeexplorer.R;
@@ -16,83 +19,50 @@ import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;
 
-public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHolder> {
+public class MainMenuAdapter extends BaseAdapter {
     private ArrayList<MenuItem> localDataSet;
+    Context context;
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
-     */
-    public MainMenuAdapter(ArrayList<MenuItem> dataSet) {
-        this.localDataSet = dataSet;
+    public MainMenuAdapter(ArrayList<MenuItem> localDataSet, Context context) {
+        this.localDataSet = localDataSet;
+        this.context = context;
     }
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final ImageView imageView;
-        private final TextView textView;
-
-        public ViewHolder(View view){
-            super(view);
-
-            view.setOnClickListener( this);
-
-            imageView = view.findViewById(R.id.trip_image);
-            textView = view.findViewById(R.id.trip_cities);
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = null;
-
-            if(getLayoutPosition() == 0) {
-                intent = new Intent(view.getContext(), TripListActivity.class);
-            } else if(getLayoutPosition() == 1) {
-                intent = new Intent(view.getContext(), SelectedTripListActivity.class);
-            }
-
-            view.getContext().startActivity(intent);
-        }
-
-        private TextView getTextView() {
-            return textView;
-        };
-
-        private ImageView getImageView() {
-            return imageView;
-        };
-    }
-
-    // Create new views (invoked by the layout manager)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.menu_item, viewGroup, false);
-
-        return new ViewHolder(view);
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        MenuItem menuItem = localDataSet.get(position);
-        viewHolder.getTextView().setText(menuItem.getText());
-        viewHolder.getImageView().setImageResource(menuItem.getImageId());
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return localDataSet.size();
     }
 
+    @Override
+    public Object getItem(int i) {
+        return localDataSet.get(i);
+    }
 
+    @Override
+    public long getItemId(int i) {
+        return localDataSet.get(i).hashCode();
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+
+        final MenuItem menuItem = localDataSet.get(i);
+
+        if(view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.menu_item, viewGroup, false);
+        }
+
+        CardView cardView = view.findViewById(R.id.cvMenuItem);
+        ImageView imageView = view.findViewById(R.id.trip_image);
+        TextView textView = view.findViewById(R.id.trip_cities);
+
+        imageView.setImageResource(menuItem.getImageId());
+        textView.setText(menuItem.getText());
+        cardView.setOnClickListener(view2 -> {
+            Intent intent = new Intent(context, menuItem.getActivityClass());
+            context.startActivity(intent);
+        });
+
+        return view;
+    }
 }

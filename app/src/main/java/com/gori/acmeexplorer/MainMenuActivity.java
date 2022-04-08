@@ -1,10 +1,9 @@
 package com.gori.acmeexplorer;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.ListView;
 
 import com.gori.acmeexplorer.adapters.MainMenuAdapter;
 import com.gori.acmeexplorer.models.MenuItem;
@@ -20,10 +19,11 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         menuItems = MenuItem.createTripsList();
-        MainMenuAdapter adapter = new MainMenuAdapter(menuItems);
 
-        RecyclerView rvMainMenu = findViewById(R.id.rvMainMenu);
-        rvMainMenu.setAdapter(adapter);
-        rvMainMenu.setLayoutManager(new LinearLayoutManager(this));
+        MainMenuAdapter adapter = new MainMenuAdapter(menuItems, this);
+
+        ListView lvMainMenu = findViewById(R.id.lvMainMenu);
+
+        lvMainMenu.setAdapter(adapter);
     }
 }
