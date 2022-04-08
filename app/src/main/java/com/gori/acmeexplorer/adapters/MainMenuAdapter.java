@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.TripListActivity;
 import com.gori.acmeexplorer.models.MenuItem;
@@ -26,7 +25,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
      * by RecyclerView.
      */
     public MainMenuAdapter(ArrayList<MenuItem> dataSet) {
-        localDataSet = dataSet;
+        this.localDataSet = dataSet;
     }
 
     /**
@@ -40,7 +39,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
         public ViewHolder(View view){
             super(view);
 
-            view.setOnClickListener(this);
+            view.setOnClickListener( this);
 
             imageView = view.findViewById(R.id.trip_image);
             textView = view.findViewById(R.id.trip_cities);
@@ -83,8 +82,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localDataSet.get(position).getText());
-        viewHolder.getImageView().setImageResource(localDataSet.get(position).getImageId());
+        MenuItem menuItem = localDataSet.get(position);
+        viewHolder.getTextView().setText(menuItem.getText());
+        viewHolder.getImageView().setImageResource(menuItem.getImageId());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

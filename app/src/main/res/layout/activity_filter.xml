@@ -1,38 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp"
     tools:context=".FilterActivity">
 
-    <TextView
-        android:id="@+id/textViewDate"
-        android:layout_width="136dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginBottom="96dp"
-        android:text="Fecha"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.375"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.06999999" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="57dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="selectDate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewDate"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_calendar" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FILTROS"
+            android:textSize="40sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Fecha de inicio:"
+                android:layout_weight="0.60"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tvFilterStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.30"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_weight="0.10"
+                android:id="@+id/ivCalendarStartDate"
+                android:layout_width="30dp"
+                android:layout_height="63dp"
+                android:onClick="selectStartDate"
+                app:srcCompat="@drawable/ic_calendar"
+                android:gravity="end"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Fecha de fin:"
+                android:layout_weight="0.60"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tvFilterEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.30"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_weight="0.10"
+                android:id="@+id/ivCalendarEndDate"
+                android:layout_width="30dp"
+                android:layout_height="63dp"
+                android:onClick="selectEndDate"
+                app:srcCompat="@drawable/ic_calendar"
+                android:gravity="end"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Precio mínimo:"
+                android:textColor="@color/black"
+                android:layout_weight="0.60"
+                android:textSize="24sp"
+                android:gravity="center_vertical"/>
+
+            <EditText
+                android:id="@+id/editTextMinPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.60"
+                android:textColor="@color/black"
+                android:backgroundTint="#f9f9f9"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Precio máximo:"
+                android:textColor="@color/black"
+                android:layout_weight="0.60"
+                android:textSize="24sp"
+                android:gravity="center_vertical"/>
+
+            <EditText
+                android:id="@+id/editTextMaxPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.60"
+                android:textColor="@color/black"
+                android:backgroundTint="#f9f9f9"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:onClick="sendData"/>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -21,7 +21,39 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     private ArrayList<Trip> localDataSet;
 
     public TripsAdapter(ArrayList<Trip> dataSet) {
-        localDataSet = dataSet;
+        this.localDataSet = dataSet;
+    }
+
+    @Override
+    public int getItemCount() {
+        return localDataSet.size();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.trip_item, viewGroup, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+        Trip trip = localDataSet.get(position);
+
+        Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).into(viewHolder.getImageView());
+        viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
+        viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
+        viewHolder.getTextViewDates().setText(trip.getStartDate()  + " - " + trip.getEndDate());
+        viewHolder.getSelectedIcon().setOnClickListener(view -> {
+            trip.setSelected(!trip.getSelected());
+
+            if(trip.getSelected()) {
+                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_selected);
+            } else {
+                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_not_selected);
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -68,37 +100,4 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             return textViewDates;
         }
     }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.trip_item, viewGroup, false);
-
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Trip trip = localDataSet.get(position);
-
-        Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).into(viewHolder.getImageView());
-        viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
-        viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
-        viewHolder.getTextViewDates().setText(trip.getStartDate()  + " - " + trip.getEndDate());
-        viewHolder.getSelectedIcon().setOnClickListener(view -> {
-            trip.setSelected(!trip.getSelected());
-
-            if(trip.getSelected()) {
-                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_selected);
-            } else {
-                viewHolder.getSelectedIcon().setImageResource(R.drawable.ic_not_selected);
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return localDataSet.size();
-    }
-
 }
