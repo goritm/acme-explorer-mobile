@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.SelectedTripListActivity;
 import com.gori.acmeexplorer.TripListActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
@@ -52,7 +53,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             if(getLayoutPosition() == 0) {
                 intent = new Intent(view.getContext(), TripListActivity.class);
             } else if(getLayoutPosition() == 1) {
-                intent = new Intent(view.getContext(), TripListActivity.class);
+                intent = new Intent(view.getContext(), SelectedTripListActivity.class);
             }
 
             view.getContext().startActivity(intent);

@@ -18,6 +18,12 @@
             android:name=".TripListActivity"
             android:exported="false" />
         <activity
+            android:name=".SelectedTripListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SelectedTripDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".FilterActivity"
             android:exported="false" />
         <activity
