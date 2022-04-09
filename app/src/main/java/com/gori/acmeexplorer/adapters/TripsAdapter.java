@@ -49,7 +49,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
         viewHolder.bindView(position, mOnTripListener);
 
-        Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).into(viewHolder.getImageView());
+        Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_error).into(viewHolder.getImageView());
         viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
         viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
         viewHolder.getTextViewDates().setText(trip.getStartDate().toString() + " - " + trip.getEndDate().toString());
