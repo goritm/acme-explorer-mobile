@@ -1,14 +1,11 @@
 package com.gori.acmeexplorer;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,14 +15,18 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 
+import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
-    public ArrayList<Trip> selectedTrips = new ArrayList<>();
+    public ArrayList<Trip> selectedTrips;
 
     private Switch switchColumns;
     private Button filterButton;
@@ -33,7 +34,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private RecyclerView rvTripList;
 
     SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,35 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
 
-        trips = Trip.createTripsList();
+        try {
+            sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
+            String trips_json = sharedPreferences.getString("trip-data", "{}");
+            String selected_trips_json = sharedPreferences.getString("selected-trip-data","{}");
+
+            gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
+                    .create();
+
+            Type type = new TypeToken<ArrayList<Trip>>(){}.getType();
+
+            if(trips_json == "{}"){
+                trips = Trip.createTripsList();
+                sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
+            } else {
+                trips = gson.fromJson(trips_json, type);
+            }
+
+            if(selected_trips_json == "{}"){
+                selectedTrips = new ArrayList<>();
+            } else {
+                selectedTrips = gson.fromJson(selected_trips_json, type);
+            }
+        } catch (Exception e) {
+
+        }
+
+
         tripsAdapter = new TripsAdapter(trips, this);
         rvTripList.setAdapter(tripsAdapter);
 
@@ -52,10 +81,9 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList.setLayoutManager(gridLayoutManager);
 
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(compoundButton.isChecked()){
+            if (compoundButton.isChecked()) {
                 gridLayoutManager.setSpanCount(2);
-            }
-            else {
+            } else {
                 gridLayoutManager.setSpanCount(1);
             }
         });
@@ -90,17 +118,14 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         Trip trip = trips.get(position);
         trip.setSelected(!trip.getSelected());
 
-        if(trip.getSelected()){
+        if (trip.getSelected()) {
             selectedTrips.add(trip);
         } else {
             selectedTrips.remove(trip);
         }
 
-        sharedPreferences = getSharedPreferences("trip_data", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        editor.putString("my_object", new Gson().toJson(selectedTrips));
-        editor.apply();
-
+        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
+        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
         tripsAdapter.notifyDataSetChanged();
     }
 }

@@ -80,6 +80,19 @@ public class Trip implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    @Override
+    public String toString() {
+        return "Trip{" +
+                "startCity='" + startCity + '\'' +
+                ", endCity='" + endCity + '\'' +
+                ", price=" + price +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", isSelected=" + isSelected +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
     public static ArrayList<Trip> createTripsList() {
         ArrayList<Trip> trips = new ArrayList<>();
 

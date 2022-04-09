@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 
+import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
@@ -20,6 +23,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +32,23 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
 
+
+
         try {
-            sharedPreferences  = getSharedPreferences("trip_data", MODE_PRIVATE);
-            String json = sharedPreferences.getString("my_object","{}");
-            selectedTrips = new Gson().fromJson(json, new TypeToken<ArrayList<Trip>>(){}.getType());
+            sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
+            String json = sharedPreferences.getString("selected-trip-data","{}");
+
+            gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
+                    .create();
+
+            if(json == "{}"){
+                selectedTrips = new ArrayList<>();
+            } else {
+                Type type = new TypeToken<ArrayList<Trip>>(){}.getType();
+                selectedTrips = gson.fromJson(json, type);
+            }
         } catch (Exception e){
 
         }
