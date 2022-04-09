@@ -1,5 +1,7 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.Utils.dateFormatter;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,8 +17,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 public class SelectedTripDetailActivity extends AppCompatActivity {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
-
     private ImageView ivImage, ivIcon;
     private TextView tvStartDate, tvEndDate, tvStartCity, tvEndCity, tvPrice;
 
@@ -38,8 +38,8 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(trip.getImageUrl()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getStartCity());
         tvEndCity.setText(trip.getEndCity());
-        tvStartDate.setText("Fecha de Ida: " + trip.getStartDate().format(formatter));
-        tvEndDate.setText("Fecha de Vuelta: " + trip.getEndDate().format(formatter));
+        tvStartDate.setText("Fecha de Ida: " + trip.getStartDate().format(dateFormatter));
+        tvEndDate.setText("Fecha de Vuelta: " + trip.getEndDate().format(dateFormatter));
         tvPrice.setText(trip.getPrice() + "€");
 
         if(trip.getSelected()) {

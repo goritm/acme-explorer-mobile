@@ -1,5 +1,7 @@
 package com.gori.acmeexplorer.adapters;
 
+import static com.gori.acmeexplorer.Utils.dateFormatter;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_error).into(viewHolder.getImageView());
         viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
         viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
-        viewHolder.getTextViewDates().setText(trip.getStartDate().toString() + " - " + trip.getEndDate().toString());
+        viewHolder.getTextViewDates().setText(trip.getStartDate().format(dateFormatter) + " - " + trip.getEndDate().format(dateFormatter));
         viewHolder.getSelectedIcon().setImageResource(trip.getSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
     }
 

@@ -2,13 +2,15 @@ package com.gori.acmeexplorer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 public class FilterActivity extends AppCompatActivity {
@@ -23,6 +25,7 @@ public class FilterActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
 
     TextView tvFilterStartDate, tvFilterEndDate;
+    EditText editTextMaxPrice, editTextMinPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +34,13 @@ public class FilterActivity extends AppCompatActivity {
 
         tvFilterStartDate = findViewById(R.id.tvFilterStartDate);
         tvFilterEndDate = findViewById(R.id.tvFilterEndDate);
+        editTextMinPrice = findViewById(R.id.editTextMinPrice);
+        editTextMaxPrice = findViewById(R.id.editTextMaxPrice);
     }
 
     public void selectStartDate(View view){
         datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            selectedStartDate = day + "/" + (month + 1) + "/" + year;
+            selectedStartDate = LocalDate.of(year, month + 1, day).toString();
             tvFilterStartDate.setText(selectedStartDate);
             yy = year;
             mm = month;
@@ -47,7 +52,7 @@ public class FilterActivity extends AppCompatActivity {
 
     public void selectEndDate(View view){
         datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            selectedEndDate = day + "/" + (month + 1) + "/" + year;
+            selectedEndDate = LocalDate.of(year, month + 1, day).toString();
             tvFilterEndDate.setText(selectedEndDate);
             yy = year;
             mm = month;
@@ -62,10 +67,10 @@ public class FilterActivity extends AppCompatActivity {
 
         intent.putExtra("filterMinDate", selectedStartDate);
         intent.putExtra("filterMaxDate", selectedEndDate);
-        intent.putExtra("filterMinPrice", tvFilterStartDate.getText().toString());
-        intent.putExtra("filterMaxPrice", tvFilterEndDate.getText().toString());
+        intent.putExtra("filterMinPrice", editTextMinPrice.getText().toString());
+        intent.putExtra("filterMaxPrice", editTextMaxPrice.getText().toString());
 
-        setResult(1, intent);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 }

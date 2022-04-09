@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Switch;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -23,12 +25,14 @@ import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
     private ArrayList<Trip> selectedTrips;
+    private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
     private Button filterButton;
@@ -93,12 +97,39 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == 1) {
-                    trips.remove(0);
-                    tripsAdapter.notifyItemRemoved(0);
+                if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
-                } else if (result.getResultCode() == 2) {
-                    Intent data = result.getData();
+
+                    BigDecimal filterMinPrice = new BigDecimal(data.getStringExtra("filterMinPrice"));
+                    BigDecimal filterMaxPrice = new BigDecimal(data.getStringExtra("filterMaxPrice"));
+                    LocalDate filterMinDate = LocalDate.parse(data.getStringExtra("filterMinDate"));
+                    LocalDate filterMaxDate = LocalDate.parse(data.getStringExtra("filterMaxDate"));
+
+                    for (int i = 0; i < trips.size(); i++) {
+                        Trip trip = trips.get(i);
+
+                        Boolean validMinPrice = trip.getPrice().compareTo(filterMinPrice) >= 0;
+                        Boolean validMaxPrice = trip.getPrice().compareTo(filterMaxPrice) <= 0;
+
+                        Boolean validStartDate = trip.getStartDate().isAfter(filterMinDate) || trip.getStartDate().isEqual(filterMinDate);
+                        Boolean validEndDate = trip.getStartDate().isBefore(filterMaxDate) || trip.getStartDate().isEqual(filterMaxDate);
+
+                        Log.d("epic", String.valueOf(validStartDate));
+                        Log.d("epic", String.valueOf(validEndDate));
+
+
+                        if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {
+                            filteredTrips.add(trip);
+                        }
+                    }
+
+                    if (filteredTrips.size() > 0) {
+                        trips.clear();
+                        trips.addAll(filteredTrips);
+                        tripsAdapter.notifyDataSetChanged();
+                    } else {
+                        Snackbar.make(rvTripList, "No se encontraron viajes con los filtros seleccionados", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -117,8 +148,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         if (trip.getSelected()) {
             selectedTrips.add(trip);
         } else {
-            for(int i = 0; i < selectedTrips.size(); i++) {
-                if(selectedTrips.get(i).getId().equals(trip.getId())){
+            for (int i = 0; i < selectedTrips.size(); i++) {
+                if (selectedTrips.get(i).getId().equals(trip.getId())) {
                     selectedTrips.remove(i);
                 }
             }

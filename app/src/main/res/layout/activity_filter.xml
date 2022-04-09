@@ -114,6 +114,15 @@
                 android:backgroundTint="#f9f9f9"
                 android:inputType="number" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="€"
+                android:layout_weight="0.05"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -134,10 +143,19 @@
                 android:id="@+id/editTextMaxPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.60"
+                android:layout_weight="0.35"
                 android:textColor="@color/black"
                 android:backgroundTint="#f9f9f9"
                 android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="€"
+                android:layout_weight="0.05"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
 
         </LinearLayout>
 

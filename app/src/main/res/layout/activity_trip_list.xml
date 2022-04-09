@@ -10,19 +10,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_margin="10dp">
 
         <Button
             android:id="@+id/filterButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Filtrar" />
+            android:text="Filtrar"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"/>
 
         <Switch
             android:id="@+id/switchCols"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Cambiar orientacion?" />
+            android:text="orientación"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="end|center_vertical"/>
 
     </LinearLayout>
 
