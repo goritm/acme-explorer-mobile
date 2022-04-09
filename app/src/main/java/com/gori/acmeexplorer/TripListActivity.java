@@ -1,5 +1,7 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.Utils.tripArrayType;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
-    public ArrayList<Trip> selectedTrips;
+    private ArrayList<Trip> selectedTrips;
 
     private Switch switchColumns;
     private Button filterButton;
@@ -48,27 +50,21 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         try {
             sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
             String trips_json = sharedPreferences.getString("trip-data", "{}");
-            String selected_trips_json = sharedPreferences.getString("selected-trip-data","{}");
+            String selected_trips_json = sharedPreferences.getString("selected-trip-data", "{}");
 
             gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
                     .create();
 
-            Type type = new TypeToken<ArrayList<Trip>>(){}.getType();
-
-            if(trips_json == "{}"){
+            if (trips_json == "{}") {
                 trips = Trip.createTripsList();
                 sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
             } else {
-                trips = gson.fromJson(trips_json, type);
+                trips = gson.fromJson(trips_json, tripArrayType);
             }
 
-            if(selected_trips_json == "{}"){
-                selectedTrips = new ArrayList<>();
-            } else {
-                selectedTrips = gson.fromJson(selected_trips_json, type);
-            }
+            selectedTrips = selected_trips_json == "{}" ? new ArrayList<>() : gson.fromJson(selected_trips_json, tripArrayType);
         } catch (Exception e) {
 
         }

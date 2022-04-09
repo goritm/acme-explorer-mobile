@@ -1,8 +1,11 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.Utils.tripArrayType;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,9 +20,11 @@ import com.gori.acmeexplorer.models.Trip;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
-    public ArrayList<Trip> selectedTrips;
+    private ArrayList<Trip> trips;
+    private ArrayList<Trip> selectedTrips;
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
@@ -32,24 +37,23 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
 
-
-
         try {
             sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
-            String json = sharedPreferences.getString("selected-trip-data","{}");
+//            sharedPreferences.edit().clear().commit();
+            String json = sharedPreferences.getString("selected-trip-data", "{}");
+            String trips_json = sharedPreferences.getString("trip-data", "{}");
 
             gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
                     .create();
 
-            if(json == "{}"){
-                selectedTrips = new ArrayList<>();
-            } else {
-                Type type = new TypeToken<ArrayList<Trip>>(){}.getType();
-                selectedTrips = gson.fromJson(json, type);
+            selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, tripArrayType);
+
+            if (trips_json != "{}") {
+                trips = gson.fromJson(trips_json, tripArrayType);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -69,8 +73,23 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     @Override
     public void onSelectTrip(int position) {
-        Trip trip = selectedTrips.get(position);
-        trip.setSelected(!trip.getSelected());
+        Trip selectedTrip = selectedTrips.get(position);
+
+        selectedTrip.setSelected(false);
+
+        for(int i = 0; i < trips.size(); i++) {
+            Log.d("kek", String.valueOf(trips.get(i).getId().equals(selectedTrip.getId())));
+
+            if(trips.get(i).getId().equals(selectedTrip.getId())){
+                trips.get(i).setSelected(false);
+            }
+        }
+
+        selectedTrips.remove(selectedTrip);
+
+        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
+
         tripsAdapter.notifyDataSetChanged();
     }
 }
