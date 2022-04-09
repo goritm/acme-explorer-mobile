@@ -117,7 +117,11 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         if (trip.getSelected()) {
             selectedTrips.add(trip);
         } else {
-            selectedTrips.remove(trip);
+            for(int i = 0; i < selectedTrips.size(); i++) {
+                if(selectedTrips.get(i).getId().equals(trip.getId())){
+                    selectedTrips.remove(i);
+                }
+            }
         }
 
         sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();

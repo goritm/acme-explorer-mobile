@@ -47,16 +47,6 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
         } else {
             ivIcon.setImageResource(R.drawable.ic_not_selected);
         }
-
-        ivIcon.setOnClickListener(view -> {
-            trip.setSelected(!trip.getSelected());
-
-            if(trip.getSelected()) {
-                ivIcon.setImageResource(R.drawable.ic_selected);
-            } else {
-                ivIcon.setImageResource(R.drawable.ic_not_selected);
-            }
-        });
     }
 
     public void buyTrip(View view) {

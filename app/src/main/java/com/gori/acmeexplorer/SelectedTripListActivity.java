@@ -78,8 +78,6 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         selectedTrip.setSelected(false);
 
         for(int i = 0; i < trips.size(); i++) {
-            Log.d("kek", String.valueOf(trips.get(i).getId().equals(selectedTrip.getId())));
-
             if(trips.get(i).getId().equals(selectedTrip.getId())){
                 trips.get(i).setSelected(false);
             }
