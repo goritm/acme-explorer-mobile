@@ -1,26 +1,20 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.Utils.gson;
 import static com.gori.acmeexplorer.Utils.tripArrayType;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 
-import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
@@ -28,7 +22,6 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +32,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         try {
             sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
-//            sharedPreferences.edit().clear().commit();
             String json = sharedPreferences.getString("selected-trip-data", "{}");
             String trips_json = sharedPreferences.getString("trip-data", "{}");
-
-            gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
-                    .create();
 
             selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, tripArrayType);
 

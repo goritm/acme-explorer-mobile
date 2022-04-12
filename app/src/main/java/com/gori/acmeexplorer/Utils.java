@@ -1,5 +1,7 @@
 package com.gori.acmeexplorer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -17,9 +19,15 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
 public class Utils {
-    public static Type tripArrayType = new TypeToken<ArrayList<Trip>>(){}.getType();
+    public static Type tripArrayType = new TypeToken<ArrayList<Trip>>() {
+    }.getType();
 
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+
+    public static Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(LocalDate.class, new LocalDateConverter())
+            .create();
 
     public static class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
         public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {

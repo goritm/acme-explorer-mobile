@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.Utils.gson;
 import static com.gori.acmeexplorer.Utils.tripArrayType;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -18,13 +19,9 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private RecyclerView rvTripList;
 
     SharedPreferences sharedPreferences;
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +51,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
             String trips_json = sharedPreferences.getString("trip-data", "{}");
             String selected_trips_json = sharedPreferences.getString("selected-trip-data", "{}");
-
-            gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(LocalDate.class, new Utils.LocalDateConverter())
-                    .create();
 
             if (trips_json == "{}") {
                 trips = Trip.createTripsList();
@@ -113,10 +104,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
                         Boolean validStartDate = trip.getStartDate().isAfter(filterMinDate) || trip.getStartDate().isEqual(filterMinDate);
                         Boolean validEndDate = trip.getStartDate().isBefore(filterMaxDate) || trip.getStartDate().isEqual(filterMaxDate);
-
-                        Log.d("epic", String.valueOf(validStartDate));
-                        Log.d("epic", String.valueOf(validEndDate));
-
 
                         if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {
                             filteredTrips.add(trip);
