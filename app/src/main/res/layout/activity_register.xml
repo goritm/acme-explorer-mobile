@@ -11,8 +11,8 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:src="@drawable/ic_launcher_background"
+        android:layout_height="250dp"
+        android:src="@drawable/travel"
         android:contentDescription="@string/app_name"/>
 
     <ScrollView
@@ -79,6 +79,16 @@
                 android:text="@string/register_button_mail_text"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/white"/>
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_button_login"
+                android:textAllCaps="true"
+                android:text="Tienes una cuenta?   Logueate"
+                android:textColor="@color/blue_button_color"/>
 
         </LinearLayout>
 

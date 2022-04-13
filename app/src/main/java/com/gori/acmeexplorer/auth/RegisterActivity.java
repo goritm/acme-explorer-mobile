@@ -2,6 +2,7 @@ package com.gori.acmeexplorer.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,7 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private AutoCompleteTextView register_email_et, register_password_et, register_password_confirmation_et;
     private TextInputLayout register_email, register_password, register_password_confirmation;
-    private Button registerButton;
+    private Button registerButton, loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         register_password = findViewById(R.id.register_password);
         register_password_confirmation = findViewById(R.id.register_password_confirmation);
         registerButton = findViewById(R.id.register_button_mail);
+        loginButton = findViewById(R.id.register_button_login);
 
         register_email_et.setText(emailParam);
 
@@ -68,5 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        loginButton.setOnClickListener(l -> redirectToLoginActivity());
+    }
+
+    private void redirectToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

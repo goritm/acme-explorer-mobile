@@ -11,6 +11,7 @@ import androidx.transition.TransitionSet;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,11 +23,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.gori.acmeexplorer.R;
@@ -38,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Button signInButtonGoogle, signInButtonMail, registerButton;
-    private ProgressBar progressBar;
     private TextInputLayout loginEmailParent, loginPasswordParent;
     private AutoCompleteTextView loginEmail, loginPassword;
 
@@ -49,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        progressBar = findViewById(R.id.login_progress);
         loginEmail = findViewById(R.id.login_email_et);
         loginPassword = findViewById(R.id.login_password_et);
         loginEmailParent = findViewById(R.id.login_email);
@@ -68,13 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
         signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
-        registerButton.setOnClickListener(l -> redirectToSignUpActivity());
-    }
-
-    private void redirectToSignUpActivity() {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        intent.putExtra(RegisterActivity.EMAIL_PARAM, loginEmail.getText().toString());
-        startActivity(intent);
+        registerButton.setOnClickListener(l -> redirectToRegisterActivity());
     }
 
     private void attemptLoginGoogle(GoogleSignInOptions googleSignInOptions) {
@@ -116,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                     showErrorDialog();
                 }
             } catch (ApiException e) {
+                Log.d("epic", String.valueOf(e.getStatusCode()));
                 showErrorDialog();
             }
         }
@@ -155,25 +153,32 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             checkUserDatabaseLogin(user);
                         }
+                    }).addOnFailureListener(e -> {
+                        if( e instanceof FirebaseAuthInvalidUserException){
+                            Toast.makeText(LoginActivity.this, "This User Not Found , Create A New Account", Toast.LENGTH_SHORT).show();
+                        }
+                        if( e instanceof FirebaseAuthInvalidCredentialsException){
+                            Toast.makeText(LoginActivity.this, "The Password Is Invalid, Please Try Valid Password", Toast.LENGTH_SHORT).show();
+                        }
+                        if(e instanceof FirebaseNetworkException){
+                            Toast.makeText(LoginActivity.this, "Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                        }
                     });
         } else {
             showGooglePlayServicesError();
         }
     }
 
-    private void showGooglePlayServicesError() {
-        Snackbar.make(registerButton, R.string.login_google_play_services_error, Snackbar.LENGTH_LONG).setAction(R.string.login_download_gps, view -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.gps_download_url))));
-            } catch (Exception ex) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_download_url))));
-            }
-        });
-    }
-
     private void checkUserDatabaseLogin(FirebaseUser user) {
         // TODO: complete this function
         Toast.makeText(this, String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void redirectToRegisterActivity() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra(RegisterActivity.EMAIL_PARAM, loginEmail.getText().toString());
+        startActivity(intent);
     }
 
     private void showErrorEmailVerified(FirebaseUser user) {
@@ -196,6 +201,17 @@ public class LoginActivity extends AppCompatActivity {
         Snackbar.make(signInButtonMail, getString(R.string.login_mail_access_error), Snackbar.LENGTH_SHORT).show();
     }
 
+    private void showGooglePlayServicesError() {
+        Snackbar.make(registerButton, R.string.login_google_play_services_error, Snackbar.LENGTH_LONG).setAction(R.string.login_download_gps, view -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.gps_download_url))));
+            } catch (Exception ex) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_download_url))));
+            }
+        });
+    }
+
+
     private void hideLoginButton(boolean hide) {
         TransitionSet transitionSet = new TransitionSet();
         Transition layoutFade = new AutoTransition();
@@ -204,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (hide) {
             TransitionManager.beginDelayedTransition(findViewById(R.id.login_main_layout), transitionSet);
-            progressBar.setVisibility(View.VISIBLE);
             signInButtonMail.setVisibility(View.GONE);
             signInButtonGoogle.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
@@ -212,7 +227,6 @@ public class LoginActivity extends AppCompatActivity {
             loginPasswordParent.setEnabled(false);
         } else {
             TransitionManager.beginDelayedTransition(findViewById(R.id.login_main_layout), transitionSet);
-            progressBar.setVisibility(View.GONE);
             signInButtonMail.setVisibility(View.VISIBLE);
             signInButtonGoogle.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.VISIBLE);
