@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,6 +1,6 @@
 package com.gori.acmeexplorer.trips;
 
-import static com.gori.acmeexplorer.Utils.dateFormatter;
+import static com.gori.acmeexplorer.utils.Utils.dateFormatter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,12 +11,6 @@ import android.widget.TextView;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.models.Trip;
 import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 public class TripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;

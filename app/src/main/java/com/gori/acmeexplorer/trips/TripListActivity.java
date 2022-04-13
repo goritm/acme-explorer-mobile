@@ -1,7 +1,7 @@
 package com.gori.acmeexplorer.trips;
 
-import static com.gori.acmeexplorer.Utils.gson;
-import static com.gori.acmeexplorer.Utils.tripArrayType;
+import static com.gori.acmeexplorer.utils.Utils.gson;
+import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -136,7 +136,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             selectedTrips.add(trip);
         } else {
             for (int i = 0; i < selectedTrips.size(); i++) {
-                if (selectedTrips.get(i).getId().equals(trip.getId())) {
+                if (selectedTrips.get(i).equals(trip)) {
                     selectedTrips.remove(i);
                 }
             }

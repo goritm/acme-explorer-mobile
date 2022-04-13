@@ -1,7 +1,7 @@
 package com.gori.acmeexplorer.trips.selected;
 
-import static com.gori.acmeexplorer.Utils.gson;
-import static com.gori.acmeexplorer.Utils.tripArrayType;
+import static com.gori.acmeexplorer.utils.Utils.gson;
+import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,7 +66,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         selectedTrip.setSelected(false);
 
         for(int i = 0; i < trips.size(); i++) {
-            if(trips.get(i).getId().equals(selectedTrip.getId())){
+            if(trips.get(i).equals(selectedTrip)){
                 trips.get(i).setSelected(false);
             }
         }

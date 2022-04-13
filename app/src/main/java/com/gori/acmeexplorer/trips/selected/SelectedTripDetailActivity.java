@@ -1,6 +1,6 @@
 package com.gori.acmeexplorer.trips.selected;
 
-import static com.gori.acmeexplorer.Utils.dateFormatter;
+import static com.gori.acmeexplorer.utils.Utils.dateFormatter;
 
 import android.os.Bundle;
 import android.view.View;
@@ -13,9 +13,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.models.Trip;
 import com.squareup.picasso.Picasso;
-
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 public class SelectedTripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;
