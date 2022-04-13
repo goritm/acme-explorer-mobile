@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.trips;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.gori.acmeexplorer.R;
 
 import java.time.LocalDate;
 import java.util.Calendar;

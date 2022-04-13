@@ -1,8 +1,8 @@
 package com.gori.acmeexplorer.models;
 
 import com.gori.acmeexplorer.R;
-import com.gori.acmeexplorer.SelectedTripListActivity;
-import com.gori.acmeexplorer.TripListActivity;
+import com.gori.acmeexplorer.trips.selected.SelectedTripListActivity;
+import com.gori.acmeexplorer.trips.TripListActivity;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.trips;
 
 import static com.gori.acmeexplorer.Utils.gson;
 import static com.gori.acmeexplorer.Utils.tripArrayType;
@@ -14,11 +14,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Switch;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 

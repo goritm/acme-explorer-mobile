@@ -18,19 +18,19 @@
             android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".TripDetailActivity"
+            android:name=".trips.TripDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".TripListActivity"
+            android:name=".trips.TripListActivity"
             android:exported="false" />
         <activity
-            android:name=".SelectedTripListActivity"
+            android:name=".trips.selected.SelectedTripListActivity"
             android:exported="false" />
         <activity
-            android:name=".SelectedTripDetailActivity"
+            android:name=".trips.selected.SelectedTripDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".FilterActivity"
+            android:name=".trips.FilterActivity"
             android:exported="false" />
         <activity
             android:name=".MainMenuActivity"

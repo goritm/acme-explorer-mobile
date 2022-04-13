@@ -10,11 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.gori.acmeexplorer.R;
-import com.gori.acmeexplorer.SelectedTripListActivity;
-import com.gori.acmeexplorer.TripListActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;

@@ -1,39 +1,41 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.trips;
 
 import static com.gori.acmeexplorer.Utils.dateFormatter;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.snackbar.Snackbar;
+import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.models.Trip;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
-public class SelectedTripDetailActivity extends AppCompatActivity {
+public class TripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;
     private TextView tvStartDate, tvEndDate, tvStartCity, tvEndCity, tvPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_selected_trip_detail);
+        setContentView(R.layout.activity_trip_detail);
 
-        ivImage = findViewById(R.id.ivEndCityImage);
-        tvStartCity = findViewById(R.id.tvSelectedStartCity);
-        tvEndCity = findViewById(R.id.tvSelectedEndCity);
-        tvPrice = findViewById(R.id.tvSelectedPrice);
-        tvStartDate = findViewById(R.id.tvSelectedStartDate);
-        tvEndDate = findViewById(R.id.tvSelectedEndDate);
-        ivIcon = findViewById(R.id.ivSelectedIcon);
+        ivImage = findViewById(R.id.ivTrip);
+        tvStartCity = findViewById(R.id.tvStartCity);
+        tvEndCity = findViewById(R.id.tvEndCity);
+        tvPrice = findViewById(R.id.tvPrice);
+        tvStartDate = findViewById(R.id.tvStartDate);
+        tvEndDate = findViewById(R.id.tvEndDate);
+        ivIcon = findViewById(R.id.ivIcon);
 
-        Trip trip = (Trip) getIntent().getSerializableExtra("selected_trip");
+        Trip trip = (Trip) getIntent().getSerializableExtra("trip");
 
         Picasso.with(this).load(trip.getImageUrl()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getStartCity());
@@ -47,9 +49,5 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
         } else {
             ivIcon.setImageResource(R.drawable.ic_not_selected);
         }
-    }
-
-    public void buyTrip(View view) {
-        Snackbar.make(view, "Buy logic goes here", Snackbar.LENGTH_SHORT).show();
     }
 }

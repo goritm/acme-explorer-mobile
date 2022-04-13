@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.trips.selected;
 
 import static com.gori.acmeexplorer.Utils.gson;
 import static com.gori.acmeexplorer.Utils.tripArrayType;
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
 

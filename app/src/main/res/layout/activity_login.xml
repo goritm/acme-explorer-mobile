@@ -18,7 +18,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/login_main_layout">
+        android:id="@+id/login_main_layout"
+        android:layout_marginTop="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/login_button_google"
                 android:backgroundTint="@color/red_button_google"
-                android:drawableStart="@drawable/common_full_open_on_phone"
+                android:drawableStart="@drawable/ic_google"
                 android:textAllCaps="true"
                 android:text="@string/login_button_google_text"
                 android:textColor="@color/white"/>

@@ -8,7 +8,7 @@
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="20dp"
     app:cardElevation="10dp"
-    tools:context=".SelectedTripDetailActivity">
+    tools:context=".trips.selected.SelectedTripDetailActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
