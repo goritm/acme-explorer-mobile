@@ -39,10 +39,9 @@
                 android:layout_height="wrap_content">
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:id="@+id/login_email_et"
                     android:hint="@string/login_email_et_hint"
-                    android:maxLines="1"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -50,10 +49,12 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                >
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:id="@+id/login_password_et"
                     android:hint="@string/login_password_et_hint"
                     android:maxLines="1"
@@ -68,6 +69,7 @@
                 android:drawableStart="@drawable/common_full_open_on_phone"
                 android:textAllCaps="true"
                 android:text="@string/login_button_mail_text"
+                android:layout_marginTop="30dp"
                 android:textColor="@color/white"/>
 
             <androidx.appcompat.widget.AppCompatButton
