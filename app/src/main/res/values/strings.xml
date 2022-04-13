@@ -28,4 +28,12 @@
     <string name="market_download_url">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
     <string name="default_client_id">328464311712-29devut7j1fbe90dbmjtv2jv91pq8lqh.apps.googleusercontent.com</string>
     <string name="login_completed">El usuario %1$s ha accedido correctamente</string>
+    <string name="login_password_confirmation_et_hint">Confirmar contraseña</string>
+    <string name="register_button_mail_text">Registrarse</string>
+    <string name="register_error_email">El correo electrónico introducido no es válido.</string>
+    <string name="register_error_password">La contraseña no es válida.</string>
+    <string name="register_password_dont_match">Ambas contraseñas deben coincidir.</string>
+    <string name="register_created">El usuario se ha registrado correctamente</string>
+    <string name="register_error_on_register">Hubo un error al registrar el usuario</string>
+    <string name="register_error_password_min_chars">La contraseña debe tener al menos 6 caracteres</string>
 </resources>

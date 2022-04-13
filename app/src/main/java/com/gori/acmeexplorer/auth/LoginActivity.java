@@ -33,7 +33,9 @@ import com.gori.acmeexplorer.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 0x152;
+    private static final int RC_SIGN_IN = 0x124;
+    private GoogleSignInClient googleSignInClient;
+
     private FirebaseAuth mAuth;
     private Button signInButtonGoogle, signInButtonMail, registerButton;
     private ProgressBar progressBar;
@@ -62,15 +64,22 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
+        signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
+        registerButton.setOnClickListener(l -> redirectToSignUpActivity());
+    }
+
+    private void redirectToSignUpActivity() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra(RegisterActivity.EMAIL_PARAM, loginEmail.getText().toString());
+        startActivity(intent);
     }
 
     private void attemptLoginGoogle(GoogleSignInOptions googleSignInOptions) {
-        GoogleSignInClient googleSignIn = GoogleSignIn.getClient(this, googleSignInOptions);
-        
-        Intent signInIntent = googleSignIn.getSignInIntent();
+        hideLoginButton(true);
+        Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -128,22 +137,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInEmail() {
+        hideLoginButton(true);
+
         if (mAuth == null) {
             mAuth = FirebaseAuth.getInstance();
         }
 
         if (mAuth != null) {
-            mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString()).addOnCompleteListener(this, task -> {
-                FirebaseUser user = task.getResult().getUser();
+            mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString())
+                    .addOnCompleteListener(this, task -> {
+                        FirebaseUser user = task.getResult().getUser();
 
-                if (!task.isSuccessful() || user == null) {
-                    showErrorDialog();
-                } else if (!user.isEmailVerified()) {
-                    showErrorEmailVerified(user);
-                } else {
-                    checkUserDatabaseLogin(user);
-                }
-            });
+                        if (!task.isSuccessful() || user == null) {
+                            showErrorDialog();
+                        } else if (!user.isEmailVerified()) {
+                            showErrorEmailVerified(user);
+                        } else {
+                            checkUserDatabaseLogin(user);
+                        }
+                    });
         } else {
             showGooglePlayServicesError();
         }

@@ -7,14 +7,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="16dp"
-    tools:context=".auth.LoginActivity">
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge" />
+    tools:context=".auth.RegisterActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -25,29 +18,29 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/login_main_layout">
+        android:id="@+id/register_main_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/email_login_form">
+            android:id="@+id/email_register_form">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/login_email"
+                android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:id="@+id/login_email_et"
+                    android:id="@+id/register_email_et"
                     android:hint="@string/login_email_et_hint"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/login_password"
+                android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -55,8 +48,23 @@
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:id="@+id/login_password_et"
+                    android:id="@+id/register_password_et"
                     android:hint="@string/login_password_et_hint"
+                    android:maxLines="1"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_password_confirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                >
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:id="@+id/register_password_confirmation_et"
+                    android:hint="@string/login_password_confirmation_et_hint"
                     android:maxLines="1"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -64,33 +72,13 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/login_button_mail"
+                android:id="@+id/register_button_mail"
                 android:backgroundTint="@color/blue_button_color"
                 android:drawableStart="@drawable/common_full_open_on_phone"
                 android:textAllCaps="true"
-                android:text="@string/login_button_mail_text"
+                android:text="@string/register_button_mail_text"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/white"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/login_button_google"
-                android:backgroundTint="@color/red_button_google"
-                android:drawableStart="@drawable/common_full_open_on_phone"
-                android:textAllCaps="true"
-                android:text="@string/login_button_google_text"
-                android:textColor="@color/white"/>
-
-            <Button
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_marginTop="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/login_button_register"
-                android:textAllCaps="true"
-                android:text="@string/login_button_register_text"
-                android:textColor="@color/blue_button_color"/>
 
         </LinearLayout>
 
