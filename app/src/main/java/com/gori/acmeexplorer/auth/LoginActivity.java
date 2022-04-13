@@ -34,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.gori.acmeexplorer.MainMenuActivity;
 import com.gori.acmeexplorer.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -69,12 +70,17 @@ public class LoginActivity extends AppCompatActivity {
 
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
+        signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle());
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
         registerButton.setOnClickListener(l -> redirectToRegisterActivity());
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Intent intent = new Intent(this, MainMenuActivity.class);
+            startActivity(intent);
+        }
     }
 
-    private void attemptLoginGoogle(GoogleSignInOptions googleSignInOptions) {
+    private void attemptLoginGoogle() {
         hideLoginButton(true);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
