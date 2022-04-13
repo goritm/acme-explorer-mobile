@@ -1,5 +1,8 @@
 package com.gori.acmeexplorer.trips.selected;
 
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_UNIQUE_NAME;
 import static com.gori.acmeexplorer.utils.Utils.gson;
 import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
     private ArrayList<Trip> selectedTrips;
-    private TripsAdapter tripsAdapter;
+    private TripsAdapter selectedTripsAdapter;
 
     SharedPreferences sharedPreferences;
 
@@ -32,9 +35,9 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
 
         try {
-            sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
-            String json = sharedPreferences.getString("selected-trip-data", "{}");
-            String trips_json = sharedPreferences.getString("trip-data", "{}");
+            sharedPreferences = getSharedPreferences(SHARED_DATA_UNIQUE_NAME, MODE_PRIVATE);
+            String json = sharedPreferences.getString(SHARED_DATA_SELECTED_TRIPS, "{}");
+            String trips_json = sharedPreferences.getString(SHARED_DATA_TRIPS, "{}");
 
             selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, tripArrayType);
 
@@ -45,8 +48,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         }
 
-        tripsAdapter = new TripsAdapter(selectedTrips, this);
-        rvSelectedTripList.setAdapter(tripsAdapter);
+        selectedTripsAdapter = new TripsAdapter(selectedTrips, this);
+        rvSelectedTripList.setAdapter(selectedTripsAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
@@ -64,6 +67,9 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         Trip selectedTrip = selectedTrips.get(position);
 
         selectedTrip.setSelected(false);
+        selectedTripsAdapter.notifyItemRemoved(position);
+        selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
+
 
         for(int i = 0; i < trips.size(); i++) {
             if(trips.get(i).equals(selectedTrip)){
@@ -73,9 +79,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         selectedTrips.remove(selectedTrip);
 
-        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
-        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
-
-        tripsAdapter.notifyDataSetChanged();
+        sharedPreferences.edit().putString(SHARED_DATA_SELECTED_TRIPS, gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString(SHARED_DATA_TRIPS, gson.toJson(trips)).apply();
     }
 }

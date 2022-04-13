@@ -19,6 +19,11 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
 public class Utils {
+    public static String SHARED_DATA_UNIQUE_NAME = "com.gori.acmeexplorer";
+    public static String SHARED_DATA_TRIPS = "trips-data";
+    public static String SHARED_DATA_SELECTED_TRIPS = "selected-trip-data";
+
+
     public static Type tripArrayType = new TypeToken<ArrayList<Trip>>() {
     }.getType();
 

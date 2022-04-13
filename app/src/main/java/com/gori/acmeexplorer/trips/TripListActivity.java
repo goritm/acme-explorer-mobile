@@ -1,5 +1,8 @@
 package com.gori.acmeexplorer.trips;
 
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
+import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_UNIQUE_NAME;
 import static com.gori.acmeexplorer.utils.Utils.gson;
 import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
@@ -48,9 +51,9 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         filterButton = findViewById(R.id.filterButton);
 
         try {
-            sharedPreferences = getSharedPreferences("com.gori.acmeexplorer", MODE_PRIVATE);
-            String trips_json = sharedPreferences.getString("trip-data", "{}");
-            String selected_trips_json = sharedPreferences.getString("selected-trip-data", "{}");
+            sharedPreferences = getSharedPreferences(SHARED_DATA_UNIQUE_NAME, MODE_PRIVATE);
+            String trips_json = sharedPreferences.getString(SHARED_DATA_TRIPS, "{}");
+            String selected_trips_json = sharedPreferences.getString(SHARED_DATA_SELECTED_TRIPS, "{}");
 
             if (trips_json == "{}") {
                 trips = Trip.createTripsList();
@@ -142,8 +145,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             }
         }
 
-        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
-        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString(SHARED_DATA_TRIPS, gson.toJson(trips)).apply();
+        sharedPreferences.edit().putString(SHARED_DATA_SELECTED_TRIPS, gson.toJson(selectedTrips)).apply();
         tripsAdapter.notifyDataSetChanged();
     }
 }
