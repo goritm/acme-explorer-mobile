@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer.auth;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.transition.AutoTransition;
@@ -14,15 +15,25 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.gori.acmeexplorer.R;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int RC_SIGN_IN = 0x152;
     private FirebaseAuth mAuth;
     private Button signInButtonGoogle, signInButtonMail, registerButton;
     private ProgressBar progressBar;
@@ -45,7 +56,60 @@ public class LoginActivity extends AppCompatActivity {
         signInButtonMail = findViewById(R.id.login_button_mail);
         registerButton = findViewById(R.id.login_button_register);
 
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_client_id))
+                .requestEmail()
+                .build();
+
+        signInButtonGoogle.setOnClickListener(l -> attemptLoginGoogle(googleSignInOptions));
+
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
+    }
+
+    private void attemptLoginGoogle(GoogleSignInOptions googleSignInOptions) {
+        GoogleSignInClient googleSignIn = GoogleSignIn.getClient(this, googleSignInOptions);
+        
+        Intent signInIntent = googleSignIn.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> taskSignIn = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = taskSignIn.getResult(ApiException.class);
+
+                if (account != null) {
+                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+
+                    if(mAuth == null) {
+                        mAuth = FirebaseAuth.getInstance();
+                    }
+
+                    mAuth.signInWithCredential(credential)
+                            .addOnCompleteListener(this, task -> {
+                                if (task.isSuccessful()){
+                                    FirebaseUser user = task.getResult().getUser();
+                                    assert user != null;
+                                    checkUserDatabaseLogin(user);
+                                } else {
+                                    showErrorDialog();
+                                }
+                             });
+
+                }
+                else {
+                    showErrorDialog();
+                }
+            } catch (ApiException e) {
+                showErrorDialog();
+            }
+        }
     }
 
     private void attemptLoginEmail() {
@@ -70,12 +134,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if (mAuth != null) {
             mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString()).addOnCompleteListener(this, task -> {
-                if (!task.isSuccessful() || task.getResult().getUser() == null) {
-                    showErrorDialogMail();
-                } else if (!task.getResult().getUser().isEmailVerified()) {
-                    showErrorEmailVerified(task.getResult().getUser());
+                FirebaseUser user = task.getResult().getUser();
+
+                if (!task.isSuccessful() || user == null) {
+                    showErrorDialog();
+                } else if (!user.isEmailVerified()) {
+                    showErrorEmailVerified(user);
                 } else {
-                    checkUserDatabaseLogin(task.getResult().getUser());
+                    checkUserDatabaseLogin(user);
                 }
             });
         } else {
@@ -95,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkUserDatabaseLogin(FirebaseUser user) {
         // TODO: complete this function
+        Toast.makeText(this, String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_SHORT).show();
     }
 
     private void showErrorEmailVerified(FirebaseUser user) {
@@ -112,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
         }).show();
     }
 
-    private void showErrorDialogMail() {
+    private void showErrorDialog() {
         hideLoginButton(false);
         Snackbar.make(signInButtonMail, getString(R.string.login_mail_access_error), Snackbar.LENGTH_SHORT).show();
     }
