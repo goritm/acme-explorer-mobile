@@ -67,18 +67,19 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         Trip selectedTrip = selectedTrips.get(position);
 
         selectedTrip.setSelected(false);
+        selectedTrips.remove(selectedTrip);
+
         selectedTripsAdapter.notifyItemRemoved(position);
         selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
 
-
+        // Delete from main trips page
         for(int i = 0; i < trips.size(); i++) {
             if(trips.get(i).equals(selectedTrip)){
                 trips.get(i).setSelected(false);
             }
         }
 
-        selectedTrips.remove(selectedTrip);
-
+        // Update local db
         sharedPreferences.edit().putString(SHARED_DATA_SELECTED_TRIPS, gson.toJson(selectedTrips)).apply();
         sharedPreferences.edit().putString(SHARED_DATA_TRIPS, gson.toJson(trips)).apply();
     }
