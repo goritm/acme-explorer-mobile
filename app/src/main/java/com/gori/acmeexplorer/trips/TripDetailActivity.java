@@ -48,7 +48,7 @@ public class TripDetailActivity extends AppCompatActivity {
             buyButton.setVisibility(View.VISIBLE);
         } else {
             ivIcon.setImageResource(R.drawable.ic_not_selected);
-            buyButton.setVisibility(View.GONE);
+            buyButton.setVisibility(View.INVISIBLE);
         }
     }
 
