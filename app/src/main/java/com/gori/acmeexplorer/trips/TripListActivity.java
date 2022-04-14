@@ -94,16 +94,16 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
 
-                    BigDecimal filterMinPrice = new BigDecimal(data.getStringExtra("filterMinPrice"));
-                    BigDecimal filterMaxPrice = new BigDecimal(data.getStringExtra("filterMaxPrice"));
+                    Double filterMinPrice = Double.parseDouble(data.getStringExtra("filterMinPrice"));
+                    Double filterMaxPrice = Double.parseDouble(data.getStringExtra("filterMaxPrice"));
                     LocalDate filterMinDate = LocalDate.parse(data.getStringExtra("filterMinDate"));
                     LocalDate filterMaxDate = LocalDate.parse(data.getStringExtra("filterMaxDate"));
 
                     for (int i = 0; i < trips.size(); i++) {
                         Trip trip = trips.get(i);
 
-                        Boolean validMinPrice = trip.getPrice().compareTo(filterMinPrice) >= 0;
-                        Boolean validMaxPrice = trip.getPrice().compareTo(filterMaxPrice) <= 0;
+                        Boolean validMinPrice = trip.getPrice() >= filterMinPrice;
+                        Boolean validMaxPrice = trip.getPrice() <= filterMaxPrice;
 
                         Boolean validStartDate = trip.getStartDate().isAfter(filterMinDate) || trip.getStartDate().isEqual(filterMinDate);
                         Boolean validEndDate = trip.getStartDate().isBefore(filterMaxDate) || trip.getStartDate().isEqual(filterMaxDate);
