@@ -5,8 +5,11 @@ import static com.gori.acmeexplorer.utils.Utils.dateFormatter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.models.Trip;
@@ -15,6 +18,7 @@ import com.squareup.picasso.Picasso;
 public class TripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;
     private TextView tvStartDate, tvEndDate, tvStartCity, tvEndCity, tvPrice;
+    private Button buyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class TripDetailActivity extends AppCompatActivity {
         tvStartDate = findViewById(R.id.tvStartDate);
         tvEndDate = findViewById(R.id.tvEndDate);
         ivIcon = findViewById(R.id.ivIcon);
+        buyButton = findViewById(R.id.buy_trip_button);
 
         Trip trip = (Trip) getIntent().getSerializableExtra("trip");
 
@@ -40,8 +45,14 @@ public class TripDetailActivity extends AppCompatActivity {
 
         if(trip.getSelected()) {
             ivIcon.setImageResource(R.drawable.ic_selected);
+            buyButton.setVisibility(View.VISIBLE);
         } else {
             ivIcon.setImageResource(R.drawable.ic_not_selected);
+            buyButton.setVisibility(View.GONE);
         }
+    }
+
+    public void buyTrip(View view) {
+        Toast.makeText(this, "Buy Logic goes here", Toast.LENGTH_SHORT).show();
     }
 }

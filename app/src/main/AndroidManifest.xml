@@ -27,10 +27,7 @@
             android:name=".trips.TripListActivity"
             android:exported="false" />
         <activity
-            android:name=".trips.selected.SelectedTripListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".trips.selected.SelectedTripDetailActivity"
+            android:name=".trips.SelectedTripListActivity"
             android:exported="false" />
         <activity
             android:name=".trips.FilterActivity"

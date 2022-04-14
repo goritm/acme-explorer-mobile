@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer.trips.selected;
+package com.gori.acmeexplorer.trips;
 
 import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
 import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
+import com.gori.acmeexplorer.trips.TripDetailActivity;
 
 import java.util.ArrayList;
 
@@ -57,8 +58,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     @Override
     public void onTripClick(int position) {
-        Intent intent = new Intent(this, SelectedTripDetailActivity.class);
-        intent.putExtra("selected_trip", selectedTrips.get(position));
+        Intent intent = new Intent(this, TripDetailActivity.class);
+        intent.putExtra("trip", selectedTrips.get(position));
         startActivity(intent);
     }
 

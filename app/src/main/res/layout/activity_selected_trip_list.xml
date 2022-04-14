@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".trips.selected.SelectedTripListActivity">
+    tools:context=".trips.SelectedTripListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSelectedTripList"
