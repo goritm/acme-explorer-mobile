@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AcmeExplorer">
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.RegisterActivity"
             android:exported="false" />
         <activity

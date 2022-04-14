@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer.auth;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -23,7 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,8 +33,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.gori.acmeexplorer.MainMenuActivity;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.models.Trip;
+import com.gori.acmeexplorer.utils.FirebaseDatabaseService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -119,7 +123,6 @@ public class LoginActivity extends AppCompatActivity {
                     showErrorDialog();
                 }
             } catch (ApiException e) {
-                Log.d("epic", String.valueOf(e.getStatusCode()));
                 showErrorDialog();
             }
         }
@@ -178,6 +181,23 @@ public class LoginActivity extends AppCompatActivity {
     private void checkUserDatabaseLogin(FirebaseUser user) {
         // TODO: complete this function
         Toast.makeText(this, String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_SHORT).show();
+
+        FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+        firebaseDatabaseService.getTrip("1").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.getValue() != null) {
+                    Trip trip = snapshot.getValue(Trip.class);
+                    Log.d("epic", snapshot.getValue(Trip.class).toString());
+                    Toast.makeText(LoginActivity.this, trip.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

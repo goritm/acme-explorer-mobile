@@ -15,6 +15,9 @@ public class Trip implements Serializable {
     private Boolean isSelected;
     private String imageUrl;
 
+    public Trip() {
+    }
+
     public Trip(String startCity, String endCity, BigDecimal price, LocalDate startDate, LocalDate endDate, Boolean isSelected, String imageUrl) {
         this.startCity = startCity;
         this.endCity = endCity;
