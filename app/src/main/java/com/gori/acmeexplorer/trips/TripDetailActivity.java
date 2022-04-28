@@ -1,6 +1,6 @@
 package com.gori.acmeexplorer.trips;
 
-import static com.gori.acmeexplorer.utils.Utils.dateFormatter;
+import static com.gori.acmeexplorer.utils.Utils.formatDate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,8 +39,8 @@ public class TripDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(trip.getImageUrl()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getStartCity());
         tvEndCity.setText(trip.getEndCity());
-        tvStartDate.setText("Fecha de Ida: " + trip.getStartDate().format(dateFormatter));
-        tvEndDate.setText("Fecha de Vuelta: " + trip.getEndDate().format(dateFormatter));
+        tvStartDate.setText("Fecha de Ida: " + formatDate(trip.getStartDate()));
+        tvEndDate.setText("Fecha de Vuelta: " + formatDate(trip.getEndDate()));
         tvPrice.setText(trip.getPrice() + "€");
 
         if(trip.getSelected()) {

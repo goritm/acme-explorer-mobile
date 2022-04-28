@@ -4,6 +4,7 @@ import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
 import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
 import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_UNIQUE_NAME;
 import static com.gori.acmeexplorer.utils.Utils.gson;
+import static com.gori.acmeexplorer.utils.Utils.parseDate;
 import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +29,7 @@ import com.gori.acmeexplorer.models.Trip;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips;
@@ -96,8 +98,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
                     Double filterMinPrice = Double.parseDouble(data.getStringExtra("filterMinPrice"));
                     Double filterMaxPrice = Double.parseDouble(data.getStringExtra("filterMaxPrice"));
-                    LocalDate filterMinDate = LocalDate.parse(data.getStringExtra("filterMinDate"));
-                    LocalDate filterMaxDate = LocalDate.parse(data.getStringExtra("filterMaxDate"));
+                    Date filterMinDate = parseDate(data.getStringExtra("filterMinDate"));
+                    Date filterMaxDate = parseDate(data.getStringExtra("filterMaxDate"));
 
                     for (int i = 0; i < trips.size(); i++) {
                         Trip trip = trips.get(i);
@@ -105,8 +107,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                         Boolean validMinPrice = trip.getPrice() >= filterMinPrice;
                         Boolean validMaxPrice = trip.getPrice() <= filterMaxPrice;
 
-                        Boolean validStartDate = trip.getStartDate().isAfter(filterMinDate) || trip.getStartDate().isEqual(filterMinDate);
-                        Boolean validEndDate = trip.getStartDate().isBefore(filterMaxDate) || trip.getStartDate().isEqual(filterMaxDate);
+                        Boolean validStartDate = trip.getStartDate().compareTo(filterMinDate) > 0 || trip.getStartDate().compareTo(filterMinDate) == 0;
+                        Boolean validEndDate = trip.getStartDate().compareTo(filterMaxDate) < 0 || trip.getStartDate().compareTo(filterMaxDate) == 0;
 
                         if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {
                             filteredTrips.add(trip);
