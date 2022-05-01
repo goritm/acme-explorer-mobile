@@ -19,20 +19,64 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AGREGAR TRIP"
+            android:text="AGREGAR VIAJE"
             android:textSize="40sp"
             android:layout_marginBottom="10sp"
             android:gravity="center_horizontal"
             android:textColor="@color/black"
             android:textStyle="bold"/>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_StartCity"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_StartCity"
+                android:hint="Ciudad de origen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_EndCity"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_EndCity"
+                android:hint="Ciudad de destino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_Price"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_Price"
+                android:hint="Precio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_StartDate"
+            android:layout_marginBottom="10sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/et_StartDate"
-                android:hint="Fecha de inicio de viaje"
+                android:hint="Fecha de inicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
@@ -43,11 +87,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_EndDate"
+            android:layout_marginBottom="10sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/et_EndDate"
-                android:hint="Fecha de fin de viaje"
+                android:hint="Fecha de fin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
@@ -56,40 +101,19 @@
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_imageUrl"
+            android:layout_marginBottom="10sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Precio:"
-                android:textColor="@color/black"
-                android:layout_weight="0.60"
-                android:textSize="24sp"
-                android:gravity="center_vertical"/>
-
+            android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextMinPrice"
-                android:layout_width="wrap_content"
+                android:id="@+id/et_imageUrl"
+                android:hint="URL de la imagen"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.60"
-                android:textColor="@color/black"
-                android:backgroundTint="#f9f9f9"
-                android:inputType="number" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="€"
-                android:layout_weight="0.05"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-        </LinearLayout>
+                android:inputType="textUri"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnAddTrip"
@@ -97,8 +121,6 @@
             android:layout_height="wrap_content"
             android:text="Añadir"
             android:onClick="addTrip"/>
-
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

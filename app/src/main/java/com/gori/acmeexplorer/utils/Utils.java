@@ -33,7 +33,7 @@ public class Utils {
 
     public static Date parseDate(String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return new SimpleDateFormat("dd-MM-yyyy").parse(date);
         } catch (ParseException e) {
             return null;
         }
@@ -42,6 +42,12 @@ public class Utils {
     public static String formatDate(Date date) {
         return new SimpleDateFormat().format(date);
     }
+
+
+    public static String twoDigits(int n) {
+        return (n < 10) ? ("0" + n) : String.valueOf(n);
+    }
+
 
     public static Gson gson = new GsonBuilder()
             .setPrettyPrinting()

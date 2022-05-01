@@ -1,26 +1,40 @@
 package com.gori.acmeexplorer.trips;
 
+import static com.gori.acmeexplorer.utils.Utils.parseDate;
+import static com.gori.acmeexplorer.utils.Utils.twoDigits;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.models.Trip;
 import com.gori.acmeexplorer.utils.DatePickerFragment;
+import com.gori.acmeexplorer.utils.FirestoreService;
+
+import java.util.Date;
 
 public class AddTripActivity extends AppCompatActivity {
-
-    private EditText etStartDate, etEndDate;
+    private FirestoreService firestoreService;
+    private EditText etStartCity, etEndCity, etPrice, etStartDate, etEndDate, etImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
 
+        firestoreService = FirestoreService.getServiceInstance();
+
+        etStartCity = findViewById(R.id.et_StartCity);
+        etEndCity = findViewById(R.id.et_EndCity);
+        etPrice = findViewById(R.id.et_Price);
         etStartDate = findViewById(R.id.et_StartDate);
         etEndDate = findViewById(R.id.et_EndDate);
-
+        etImageUrl = findViewById(R.id.et_imageUrl);
 
         etStartDate.setOnClickListener(view -> {
             showDatePickerDialog(etStartDate);
@@ -29,42 +43,33 @@ public class AddTripActivity extends AppCompatActivity {
         etEndDate.setOnClickListener(view -> {
             showDatePickerDialog(etEndDate);
         });
-
-
-
-        //        FirestoreService firestoreService = FirestoreService.getServiceInstance();
-//        firestoreService.saveTrip(new Trip("Barquisimeto", "Caracas", 100, parseDate("2023-01-01"), parseDate("2023-01-01"), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fe/d4/caracas.jpg?w=700&h=500&s=1"), task -> {
-//            if (task.isSuccessful()){
-//                DocumentReference documentReference = task.getResult();
-//
-//                Log.i("epic", "firestore almacenado completado: " + documentReference.getId());
-//
-//                documentReference.get().addOnCompleteListener(task1 -> {
-//                    if(task1.isSuccessful()){
-//                        DocumentSnapshot document = task1.getResult();
-//                        Trip trip = document.toObject(Trip.class);
-//                        Log.i("epic", "firestore almacenado feedback: " + trip.toString());
-//                    }
-//                });
-//            } else {
-//                Log.i("epic", "firestore almacenado fallado");
-//            }
-//        });
-//
     }
 
     private void showDatePickerDialog(EditText editText) {
         DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
-            final String selectedDate = twoDigits(day) + " / " + twoDigits(month + 1) + " / " + year;
+            final String selectedDate = twoDigits(day) + "-" + twoDigits(month + 1) + "-" + year;
             editText.setText(selectedDate);
         });
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    private String twoDigits(int n) {
-        return (n < 10) ? ("0" + n) : String.valueOf(n);
-    }
-
     public void addTrip(View view) {
+        String startCity = etStartCity.getText().toString().trim();
+        String endCity = etEndCity.getText().toString().trim();
+        Double price = Double.valueOf(etPrice.getText().toString().trim());
+        Date startDate = parseDate(etStartDate.getText().toString());
+        Date endDate = parseDate(etEndDate.getText().toString());
+        String imageUrl = etImageUrl.getText().toString().trim();
+
+        Trip newTrip = new Trip(startCity, endCity, price, startDate, endDate, false, imageUrl);
+
+        firestoreService.saveTrip(newTrip).addOnSuccessListener(documentReference -> {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("documentReference", documentReference.getId());
+            setResult(RESULT_OK, returnIntent);
+            finish();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(etStartCity,  "Error adding document" + e, Snackbar.LENGTH_SHORT).show();
+        });
     }
 }

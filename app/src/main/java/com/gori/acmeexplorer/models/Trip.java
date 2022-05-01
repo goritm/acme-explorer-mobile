@@ -2,11 +2,15 @@ package com.gori.acmeexplorer.models;
 
 import static com.gori.acmeexplorer.utils.Utils.parseDate;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
+@IgnoreExtraProperties
 public class Trip implements Serializable {
     private String id;
     private String startCity;
@@ -20,8 +24,7 @@ public class Trip implements Serializable {
     public Trip() {
     }
 
-    public Trip(String id, String startCity, String endCity, double price, Date startDate, Date endDate, Boolean isSelected, String imageUrl) {
-        this.id = id;
+    public Trip(String startCity, String endCity, double price, Date startDate, Date endDate, Boolean isSelected, String imageUrl) {
         this.startCity = startCity;
         this.endCity = endCity;
         this.price = price;
@@ -31,7 +34,7 @@ public class Trip implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getId() {
+    @Exclude public String getId() {
         return id;
     }
 
@@ -125,13 +128,8 @@ public class Trip implements Serializable {
     public static ArrayList<Trip> createTripsList() {
         ArrayList<Trip> trips = new ArrayList<>();
 
-//        trips.add(new Trip("Miami", "Orlando", 200, parseDate("2022-05-10"), parseDate("2022-10-14"), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/09/e0/eb/universal-s-islands-of.jpg?w=600&h=400&s=1"));
-//        trips.add(new Trip("Seville", "Madrid", 400, parseDate("2023-01-01"), parseDate("2023-01-03"), false, "https://www.easyjet.com/ejcms/cache/medialibrary/Images/JSS/Destinations/Hero/Spain_Madrid_3840x2160.jpg?mw=1920&hash=E8335D1B8641F2150C395A3EC48BA45CC0B5BA6D"));
-//        trips.add(new Trip("Barquisimeto", "Caracas", 100, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 3), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fe/d4/caracas.jpg?w=700&h=500&s=1"));
-//        trips.add(new Trip("Madrid", "Barcelona", 50, LocalDate.of(2023, 2, 3), LocalDate.of(2023, 2, 4), false, "https://media.cntraveler.com/photos/5a985924d41cc84048ce6db0/master/w_4348,h_3261,c_limit/Catedral-de-Barcelona-GettyImages-511874340.jpg"));
-//        trips.add(new Trip("Valencia", "Sevilla", 56, LocalDate.of(2023, 4, 10), LocalDate.of(2023, 4, 13), false, "https://www.lavanguardia.com/files/content_image_mobile_filter/files/fp/uploads/2019/09/30/5fa52ff369941.r_d.328-221.jpeg"));
-//        trips.add(new Trip("Quito", "Amsterdam", 500, LocalDate.of(2022, 7, 1), LocalDate.of(2022, 7, 18), false, "https://www.guruwalk.com/blog/wp-content/uploads/2019/10/what-to-do-see-amsterdam.jpg"));
-
+        trips.add(new Trip("Miami", "Orlando", 200, parseDate("2022-05-10"), parseDate("2022-10-14"), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/09/e0/eb/universal-s-islands-of.jpg?w=600&h=400&s=1"));
+        trips.add(new Trip("Seville", "Madrid", 400, parseDate("2023-01-01"), parseDate("2023-01-03"), false, "https://www.easyjet.com/ejcms/cache/medialibrary/Images/JSS/Destinations/Hero/Spain_Madrid_3840x2160.jpg?mw=1920&hash=E8335D1B8641F2150C395A3EC48BA45CC0B5BA6D"));
         return trips;
     }
 }
