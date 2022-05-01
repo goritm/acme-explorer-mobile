@@ -37,7 +37,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
-    private Button filterButton;
+    private Button filterButton, addTripButton;
     private ProgressBar loadingPB;
 
     private TripsAdapter tripsAdapter;
@@ -53,6 +53,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
+        addTripButton = findViewById(R.id.addTripButton);
         loadingPB = findViewById(R.id.loadingPB);
 
         tripsAdapter = new TripsAdapter(trips, this);
@@ -86,6 +87,10 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         filterButton.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(), FilterActivity.class);
             activityResultLauncher.launch(intent);
+        });
+
+        addTripButton.setOnClickListener(view -> {
+            startActivity(new Intent(view.getContext(), AddTripActivity.class));
         });
     }
 
