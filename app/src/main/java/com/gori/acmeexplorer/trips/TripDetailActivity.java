@@ -5,17 +5,22 @@ import static com.gori.acmeexplorer.utils.Utils.formatDate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.models.Trip;
+import com.gori.acmeexplorer.utils.FirestoreService;
 import com.squareup.picasso.Picasso;
 
 public class TripDetailActivity extends AppCompatActivity {
+    private FirestoreService firestoreService;
+
     private ImageView ivImage, ivIcon;
     private TextView tvStartDate, tvEndDate, tvStartCity, tvEndCity, tvPrice;
     private Button buyButton;
@@ -24,6 +29,8 @@ public class TripDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_detail);
+
+        firestoreService = FirestoreService.getServiceInstance();
 
         ivImage = findViewById(R.id.ivTrip);
         tvStartCity = findViewById(R.id.tvStartCity);
@@ -43,13 +50,18 @@ public class TripDetailActivity extends AppCompatActivity {
         tvEndDate.setText("Fecha de Vuelta: " + formatDate(trip.getEndDate()));
         tvPrice.setText(trip.getPrice() + "€");
 
-        if(trip.getIsSelected()) {
-            ivIcon.setImageResource(R.drawable.ic_selected);
-            buyButton.setVisibility(View.VISIBLE);
-        } else {
-            ivIcon.setImageResource(R.drawable.ic_not_selected);
-            buyButton.setVisibility(View.INVISIBLE);
-        }
+        ivIcon.setImageResource(trip.getIsSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
+        buyButton.setVisibility(trip.getIsSelected() ? View.VISIBLE : View.INVISIBLE);
+
+        ivIcon.setOnClickListener(view -> {
+            trip.setIsSelected(!trip.getIsSelected());
+            firestoreService.selectTrip(trip.getId(), trip.getIsSelected()).addOnSuccessListener(queryDocumentSnapshots -> {
+                ivIcon.setImageResource(trip.getIsSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
+                buyButton.setVisibility(trip.getIsSelected() ? View.VISIBLE : View.INVISIBLE);
+            }).addOnFailureListener(e -> {
+                Snackbar.make(view, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+            });
+        });
     }
 
     public void buyTrip(View view) {
