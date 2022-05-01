@@ -43,7 +43,7 @@ public class TripDetailActivity extends AppCompatActivity {
         tvEndDate.setText("Fecha de Vuelta: " + formatDate(trip.getEndDate()));
         tvPrice.setText(trip.getPrice() + "€");
 
-        if(trip.getSelected()) {
+        if(trip.getIsSelected()) {
             ivIcon.setImageResource(R.drawable.ic_selected);
             buyButton.setVisibility(View.VISIBLE);
         } else {

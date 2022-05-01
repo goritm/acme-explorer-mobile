@@ -20,14 +20,13 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     private ArrayList<Trip> localDataSet;
     private OnTripListener mOnTripListener;
 
-    public TripsAdapter(ArrayList<Trip> dataSet, OnTripListener onTripListener) {
-        this.localDataSet = dataSet;
+    public TripsAdapter(ArrayList<Trip> trips, OnTripListener onTripListener) {
+        this.localDataSet = trips;
         this.mOnTripListener = onTripListener;
     }
 
     public interface OnTripListener {
         void onTripClick(int position);
-
         void onSelectTrip(int position);
     }
 
@@ -54,7 +53,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
         viewHolder.getTextViewPrice().setText(trip.getPrice() + "€");
         viewHolder.getTextViewDates().setText(formatDate(trip.getStartDate()) + " - " + formatDate(trip.getEndDate()));
-        viewHolder.getSelectedIcon().setImageResource(trip.getSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
+        viewHolder.getSelectedIcon().setImageResource(trip.getIsSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

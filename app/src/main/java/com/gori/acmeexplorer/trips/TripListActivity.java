@@ -1,11 +1,6 @@
 package com.gori.acmeexplorer.trips;
 
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_UNIQUE_NAME;
-import static com.gori.acmeexplorer.utils.Utils.gson;
 import static com.gori.acmeexplorer.utils.Utils.parseDate;
-import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,25 +10,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.widget.Button;
 import android.widget.Switch;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
+import com.gori.acmeexplorer.utils.FirestoreService;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
-    private ArrayList<Trip> trips;
-    private ArrayList<Trip> selectedTrips;
+
+    private FirestoreService firestoreService;
+    private GridLayoutManager gridLayoutManager;
+
+    private ArrayList<Trip> trips = new ArrayList<>();
     private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
@@ -41,40 +39,35 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private TripsAdapter tripsAdapter;
     private RecyclerView rvTripList;
 
-    SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
 
+        firestoreService = FirestoreService.getServiceInstance();
+
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
 
-        try {
-            sharedPreferences = getSharedPreferences(SHARED_DATA_UNIQUE_NAME, MODE_PRIVATE);
-            String trips_json = sharedPreferences.getString(SHARED_DATA_TRIPS, "{}");
-            String selected_trips_json = sharedPreferences.getString(SHARED_DATA_SELECTED_TRIPS, "{}");
-
-            if (trips_json == "{}") {
-                trips = Trip.createTripsList();
-                sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
-            } else {
-                trips = gson.fromJson(trips_json, tripArrayType);
-            }
-
-            selectedTrips = selected_trips_json == "{}" ? new ArrayList<>() : gson.fromJson(selected_trips_json, tripArrayType);
-        } catch (Exception e) {
-
-        }
-
-
         tripsAdapter = new TripsAdapter(trips, this);
         rvTripList.setAdapter(tripsAdapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         rvTripList.setLayoutManager(gridLayoutManager);
+
+        firestoreService.getTrips().addOnSuccessListener(queryDocumentSnapshots -> {
+            // trips = (ArrayList<Trip>) queryDocumentSnapshots.toObjects(Trip.class);
+            // We manually add the id to allow trip modification
+            List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
+            for(DocumentSnapshot snapshot: documentSnapshotList){
+                Trip trip = snapshot.toObject(Trip.class);
+                trip.setId(snapshot.getId());
+                trips.add(trip);
+            }
+            tripsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
 
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()) {
@@ -135,20 +128,13 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     @Override
     public void onSelectTrip(int position) {
         Trip trip = trips.get(position);
-        trip.setSelected(!trip.getSelected());
 
-        if (trip.getSelected()) {
-            selectedTrips.add(trip);
-        } else {
-            for (int i = 0; i < selectedTrips.size(); i++) {
-                if (selectedTrips.get(i).equals(trip)) {
-                    selectedTrips.remove(i);
-                }
-            }
-        }
-
-        sharedPreferences.edit().putString(SHARED_DATA_TRIPS, gson.toJson(trips)).apply();
-        sharedPreferences.edit().putString(SHARED_DATA_SELECTED_TRIPS, gson.toJson(selectedTrips)).apply();
-        tripsAdapter.notifyDataSetChanged();
+        trip.setIsSelected(!trip.getIsSelected());
+        firestoreService.selectTrip(trip.getId(), trip.getIsSelected()).addOnSuccessListener(queryDocumentSnapshots -> {
+            Snackbar.make(rvTripList, "Success!", Snackbar.LENGTH_SHORT).show();
+            tripsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 }

@@ -1,59 +1,58 @@
 package com.gori.acmeexplorer.trips;
 
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_SELECTED_TRIPS;
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_TRIPS;
-import static com.gori.acmeexplorer.utils.Utils.SHARED_DATA_UNIQUE_NAME;
-import static com.gori.acmeexplorer.utils.Utils.gson;
-import static com.gori.acmeexplorer.utils.Utils.tripArrayType;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.adapters.TripsAdapter;
 import com.gori.acmeexplorer.models.Trip;
-import com.gori.acmeexplorer.trips.TripDetailActivity;
+import com.gori.acmeexplorer.utils.FirestoreService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
-    private ArrayList<Trip> trips;
-    private ArrayList<Trip> selectedTrips;
-    private TripsAdapter selectedTripsAdapter;
+    private FirestoreService firestoreService;
+    private ArrayList<Trip> selectedTrips = new ArrayList<>();
 
-    SharedPreferences sharedPreferences;
+    private TripsAdapter selectedTripsAdapter;
+    private GridLayoutManager gridLayoutManager;
+
+    private RecyclerView rvSelectedTripList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_trip_list);
 
-        RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
+        firestoreService = FirestoreService.getServiceInstance();
 
-        try {
-            sharedPreferences = getSharedPreferences(SHARED_DATA_UNIQUE_NAME, MODE_PRIVATE);
-            String json = sharedPreferences.getString(SHARED_DATA_SELECTED_TRIPS, "{}");
-            String trips_json = sharedPreferences.getString(SHARED_DATA_TRIPS, "{}");
-
-            selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, tripArrayType);
-
-            if (trips_json != "{}") {
-                trips = gson.fromJson(trips_json, tripArrayType);
-            }
-        } catch (Exception e) {
-
-        }
-
-        selectedTripsAdapter = new TripsAdapter(selectedTrips, this);
+        rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
+        selectedTripsAdapter = new TripsAdapter(selectedTrips,this);
         rvSelectedTripList.setAdapter(selectedTripsAdapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
+
+        firestoreService.getSelectedTrips().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
+            for(DocumentSnapshot snapshot: documentSnapshotList){
+                Trip trip = snapshot.toObject(Trip.class);
+                trip.setId(snapshot.getId());
+                selectedTrips.add(trip);
+            }
+
+            Log.d("epic", selectedTrips.toString());
+            selectedTripsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -67,21 +66,15 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     public void onSelectTrip(int position) {
         Trip selectedTrip = selectedTrips.get(position);
 
-        selectedTrip.setSelected(false);
+        selectedTrip.setIsSelected(false);
         selectedTrips.remove(selectedTrip);
 
-        selectedTripsAdapter.notifyItemRemoved(position);
-        selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
-
-        // Delete from main trips page
-        for(int i = 0; i < trips.size(); i++) {
-            if(trips.get(i).equals(selectedTrip)){
-                trips.get(i).setSelected(false);
-            }
-        }
-
-        // Update local db
-        sharedPreferences.edit().putString(SHARED_DATA_SELECTED_TRIPS, gson.toJson(selectedTrips)).apply();
-        sharedPreferences.edit().putString(SHARED_DATA_TRIPS, gson.toJson(trips)).apply();
+        firestoreService.selectTrip(selectedTrip.getId(), false).addOnSuccessListener(queryDocumentSnapshots -> {
+            Snackbar.make(rvSelectedTripList, "Unselect trip", Snackbar.LENGTH_SHORT).show();
+            selectedTripsAdapter.notifyItemRemoved(position);
+            selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 }

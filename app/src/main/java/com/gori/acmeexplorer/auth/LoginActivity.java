@@ -172,8 +172,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUserDatabaseLogin(FirebaseUser user) {
-        // TODO: complete this function
         Toast.makeText(this, String.format(getString(R.string.login_completed), user.getEmail()), Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, MainMenuActivity.class));
     }
 
 
