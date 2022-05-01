@@ -3,6 +3,8 @@ package com.gori.acmeexplorer.trips;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,8 +26,9 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     private TripsAdapter selectedTripsAdapter;
     private GridLayoutManager gridLayoutManager;
-
     private RecyclerView rvSelectedTripList;
+
+    private ProgressBar loadingPB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         rvSelectedTripList.setAdapter(selectedTripsAdapter);
         gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
+        loadingPB = findViewById(R.id.selectedLoadingPB);
 
         firestoreService.getSelectedTrips().addOnSuccessListener(queryDocumentSnapshots -> {
             List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
@@ -47,8 +51,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
                 trip.setId(snapshot.getId());
                 selectedTrips.add(trip);
             }
-
-            Log.d("epic", selectedTrips.toString());
+            loadingPB.setVisibility(View.GONE);
             selectedTripsAdapter.notifyDataSetChanged();
         }).addOnFailureListener(e -> {
             Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
@@ -70,7 +73,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         selectedTrips.remove(selectedTrip);
 
         firestoreService.selectTrip(selectedTrip.getId(), false).addOnSuccessListener(queryDocumentSnapshots -> {
-            Snackbar.make(rvSelectedTripList, "Unselect trip", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(rvSelectedTripList, "Removed trip from list", Snackbar.LENGTH_SHORT).show();
             selectedTripsAdapter.notifyItemRemoved(position);
             selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
         }).addOnFailureListener(e -> {

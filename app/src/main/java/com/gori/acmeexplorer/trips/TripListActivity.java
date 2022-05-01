@@ -12,7 +12,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +38,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
     private Switch switchColumns;
     private Button filterButton;
+    private ProgressBar loadingPB;
+
     private TripsAdapter tripsAdapter;
     private RecyclerView rvTripList;
 
@@ -49,6 +53,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
+        loadingPB = findViewById(R.id.loadingPB);
 
         tripsAdapter = new TripsAdapter(trips, this);
         rvTripList.setAdapter(tripsAdapter);
@@ -64,6 +69,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                 trip.setId(snapshot.getId());
                 trips.add(trip);
             }
+            loadingPB.setVisibility(View.GONE);
             tripsAdapter.notifyDataSetChanged();
         }).addOnFailureListener(e -> {
             Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
@@ -131,7 +137,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
         trip.setIsSelected(!trip.getIsSelected());
         firestoreService.selectTrip(trip.getId(), trip.getIsSelected()).addOnSuccessListener(queryDocumentSnapshots -> {
-            Snackbar.make(rvTripList, "Success!", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(rvTripList, trip.getIsSelected() ? "Added trip to selected list" : "Removed trip from list", Snackbar.LENGTH_SHORT).show();
             tripsAdapter.notifyDataSetChanged();
         }).addOnFailureListener(e -> {
             Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
