@@ -98,6 +98,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     }
 
     public void loadTrips() {
+        trips.clear();
+
         firestoreService.getTrips().addOnSuccessListener(queryDocumentSnapshots -> {
             // trips = (ArrayList<Trip>) queryDocumentSnapshots.toObjects(Trip.class);
             // We manually add the id to allow trip modification
@@ -114,18 +116,13 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         });
     }
 
-    public void reloadTrips(){
-        trips = new ArrayList<>();
-        loadTrips();
-    }
-
     public void addTrip() {
         Intent intent  = new Intent(this, AddTripActivity.class);
         activityLauncher.launch(intent, result -> {
             if(result.getResultCode() == Activity.RESULT_OK){
                 String documentId = result.getData().getStringExtra("documentReference");
                 Snackbar.make(rvTripList, "Trip " + documentId + " added successfully!", Snackbar.LENGTH_SHORT).show();
-                reloadTrips();
+                loadTrips();
             }
         });
     }
