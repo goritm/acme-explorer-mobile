@@ -1,5 +1,7 @@
 package com.gori.acmeexplorer;
 
+import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
+
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,16 +94,13 @@ public class FirebaseStorageActivity extends AppCompatActivity {
         try {
             newFilePicture.createNewFile();
         } catch (Exception e) {
-            Log.i("epic", "Error creating new file: " + e.getMessage());
+            Log.i("loggerName", "Error creating new file: " + e.getMessage());
         }
 
         Uri outputFileDir = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileProvider", newFilePicture);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileDir);
-
-        Log.i("epic", BuildConfig.APPLICATION_ID + ".fileProvider");
-
 
         activityLauncher.launch(cameraIntent, result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
@@ -112,7 +111,7 @@ public class FirebaseStorageActivity extends AppCompatActivity {
                 UploadTask uploadTask = storageReference.putFile(Uri.fromFile(filePicture));
                 uploadTask.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.i("epic", "Firebase storage completed: " + task.getResult().getTotalByteCount());
+                        Log.i(LOGGER_NAME, "Firebase storage completed: " + task.getResult().getTotalByteCount());
 
                         storageReference.getDownloadUrl().addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
@@ -124,9 +123,7 @@ public class FirebaseStorageActivity extends AppCompatActivity {
                             }
                         });
                     }
-                }).addOnFailureListener(e -> {
-                    Log.e("epic", "Firebase Storage Error: " + e.getMessage());
-                });
+                }).addOnFailureListener(e -> Log.e(LOGGER_NAME, "Firebase Storage Error: " + e.getMessage()));
             }
         });
     }

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utils {
+    public static final String LOGGER_NAME = "acme-explorer-logs";
+
     public static Date parseDate(String date) {
         try {
             return new SimpleDateFormat("dd-MM-yyyy").parse(date);
