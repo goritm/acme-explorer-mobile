@@ -62,7 +62,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList.setAdapter(tripsAdapter);
         gridLayoutManager = new GridLayoutManager(this, 1);
         rvTripList.setLayoutManager(gridLayoutManager);
-        loadTrips();
 
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()) {
@@ -75,6 +74,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         filterButton.setOnClickListener(view -> filterTrips());
         addTripButton.setOnClickListener(view -> addTrip());
 
+        loadTrips();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     }
 
     public void addTrip() {
-        Intent intent  = new Intent(this, AddTripActivity.class);
+        Intent intent = new Intent(this, AddTripActivity.class);
         activityLauncher.launch(intent, result -> {
             if(result.getResultCode() == Activity.RESULT_OK){
                 String documentId = result.getData().getStringExtra("documentReference");

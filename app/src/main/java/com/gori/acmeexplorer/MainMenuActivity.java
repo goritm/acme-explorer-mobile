@@ -24,14 +24,12 @@ public class MainMenuActivity extends AppCompatActivity implements BottomNavigat
         setContentView(R.layout.activity_main_menu);
 
         menuItems = MenuItem.createTripsList();
-
         MainMenuAdapter adapter = new MainMenuAdapter(menuItems, this);
-
         ListView lvMainMenu = findViewById(R.id.lvMainMenu);
+        lvMainMenu.setAdapter(adapter);
+
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(this);
-
-        lvMainMenu.setAdapter(adapter);
     }
 
     @Override
@@ -40,6 +38,10 @@ public class MainMenuActivity extends AppCompatActivity implements BottomNavigat
             case R.id.page_profile:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                return true;
+
+            case R.id.page_upload:
+                startActivity(new Intent(this, FirebaseStorageActivity.class));
                 return true;
         }
 
