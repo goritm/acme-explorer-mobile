@@ -4,8 +4,8 @@ import static com.gori.acmeexplorer.utils.Utils.formatDate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.maps.MapsActivity;
 import com.gori.acmeexplorer.models.Trip;
 import com.gori.acmeexplorer.utils.FirestoreService;
 import com.squareup.picasso.Picasso;
@@ -66,5 +67,9 @@ public class TripDetailActivity extends AppCompatActivity {
 
     public void buyTrip(View view) {
         Toast.makeText(this, "Buy Logic goes here", Toast.LENGTH_SHORT).show();
+    }
+
+    public void openMap(View view) {
+        startActivity(new Intent(this, MapsActivity.class));
     }
 }
