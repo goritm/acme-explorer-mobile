@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.gori.acmeexplorer.adapters.MainMenuAdapter;
 import com.gori.acmeexplorer.auth.LoginActivity;
+import com.gori.acmeexplorer.maps.LocationActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class MainMenuActivity extends AppCompatActivity implements BottomNavigat
     @Override
     public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
         switch(item.getItemId()){
+            case R.id.page_menu:
+                startActivity(new Intent(this, LocationActivity.class));
+                return true;
+
             case R.id.page_profile:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
