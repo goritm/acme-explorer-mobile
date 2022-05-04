@@ -10,107 +10,115 @@
     app:cardElevation="10dp"
     tools:context=".trips.TripDetailActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="20dp">
-
-        <ImageView
-            android:id="@+id/ivTrip"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            tools:srcCompat="@tools:sample/avatars"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/tvEndCity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="40dp"/>
-
-        <TextView
-            android:id="@+id/tvStartCity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="50dp"
-            />
-
-
-
-        <TextView
-            android:id="@+id/tvStartDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"/>
-
-        <TextView
-            android:id="@+id/tvEndDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="30dp"/>
-
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"/>
-
-        <Button
-            android:id="@+id/buy_trip_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Comprar"
-            android:onClick="buyTrip"
-            android:layout_marginBottom="10dp"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
 
-            <Button
-                android:id="@+id/btn_openMap"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Abrir Mapa"
-                android:onClick="openMap"
-                android:layout_weight="0.90"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                >
 
-            <ImageView
-                android:id="@+id/ivIcon"
-                android:layout_width="50sp"
-                android:layout_height="60sp"
-                app:tint="#952222"
-                app:srcCompat="@drawable/ic_not_selected"
-                android:layout_gravity="end"/>
+                <ImageView
+                    android:id="@+id/ivTrip"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="0.70"/>
+
+                <fragment
+                    android:id="@+id/map"
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_weight="0.30"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvEndCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="30dp"/>
+
+            <TextView
+                android:id="@+id/tvStartCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tvStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:id="@+id/tvEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="30dp"/>
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                >
+
+                <Button
+                    android:id="@+id/buy_trip_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comprar"
+                    android:onClick="buyTrip"
+                    android:layout_weight="0.90"/>
+
+                <ImageView
+                    android:id="@+id/ivIcon"
+                    android:layout_width="50sp"
+                    android:layout_height="60sp"
+                    app:tint="#952222"
+                    app:srcCompat="@drawable/ic_not_selected"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
 </androidx.cardview.widget.CardView>

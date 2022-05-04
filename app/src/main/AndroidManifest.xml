@@ -24,9 +24,6 @@
             android:name=".maps.LocationActivity"
             android:exported="false" />
         <activity
-            android:name=".maps.MapsActivity"
-            android:exported="false" />
-        <activity
             android:name=".FirebaseStorageActivity"
             android:exported="false" />
         <activity
