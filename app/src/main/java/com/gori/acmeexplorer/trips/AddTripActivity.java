@@ -63,6 +63,11 @@ public class AddTripActivity extends AppCompatActivity {
 
         Trip newTrip = new Trip(startCity, endCity, price, startDate, endDate, false, imageUrl);
 
+        if(!newTrip.isValid()){
+            Snackbar.make(etStartCity,  "Debes llenar todos los campos", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
         firestoreService.saveTrip(newTrip).addOnSuccessListener(documentReference -> {
             Intent returnIntent = new Intent();
             returnIntent.putExtra("documentReference", documentReference.getId());

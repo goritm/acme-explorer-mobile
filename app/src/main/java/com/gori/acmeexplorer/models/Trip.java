@@ -34,7 +34,8 @@ public class Trip implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    @Exclude public String getId() {
+    @Exclude
+    public String getId() {
         return id;
     }
 
@@ -98,6 +99,15 @@ public class Trip implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public boolean isValid() {
+        return (startCity != null &&
+                endCity != null &&
+                price > 0 &&
+                startDate != null &&
+                endDate != null &&
+                imageUrl != null);
+    }
+
     @Override
     public String toString() {
         return "Trip{" +
@@ -127,7 +137,6 @@ public class Trip implements Serializable {
 
     public static ArrayList<Trip> createTripsList() {
         ArrayList<Trip> trips = new ArrayList<>();
-
         trips.add(new Trip("Miami", "Orlando", 200, parseDate("2022-05-10"), parseDate("2022-10-14"), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/09/e0/eb/universal-s-islands-of.jpg?w=600&h=400&s=1"));
         trips.add(new Trip("Seville", "Madrid", 400, parseDate("2023-01-01"), parseDate("2023-01-03"), false, "https://www.easyjet.com/ejcms/cache/medialibrary/Images/JSS/Destinations/Hero/Spain_Madrid_3840x2160.jpg?mw=1920&hash=E8335D1B8641F2150C395A3EC48BA45CC0B5BA6D"));
         return trips;
