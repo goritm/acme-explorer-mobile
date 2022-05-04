@@ -5,7 +5,10 @@ Implements some Firebase technologies like Firestore, Storage and Authentication
 
 ## API Keys
 
-If you'd like to run it locally, you'll need to add a Google Maps api key inside the `local.properties` file as: `MAPS_API_KEY=YOUR_API_KEY`
+If you'd like to run it locally, you'll need to add the following API keys to the `local.properties` file: 
+
+- Google Maps Key: `MAPS_API_KEY=YOUR_GMAPS_API_KEY`
+- Open Weather Key: `OPENWEATHER_API_KEY=YOUR_OPENWEATHER_API_KEY`
 
 ## Video
 
