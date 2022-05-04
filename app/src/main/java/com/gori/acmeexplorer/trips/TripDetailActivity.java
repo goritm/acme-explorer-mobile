@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.gori.acmeexplorer.BuildConfig;
 import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.api.Geolocation;
 import com.gori.acmeexplorer.api.GeolocationService;
@@ -99,7 +100,7 @@ public class TripDetailActivity extends AppCompatActivity implements OnMapReadyC
         this.mMap = googleMap;
 
         GeolocationService service = retrofit.create(GeolocationService.class);
-        Call<List<Geolocation>> response = service.getGeolocation(trip.getEndCity(), "1693cebd9e6a34b535a407e72c849aa9");
+        Call<List<Geolocation>> response = service.getGeolocation(trip.getEndCity(), BuildConfig.OPENWEATHER_API_KEY);
 
         response.enqueue(new Callback<List<Geolocation>>() {
             @Override
