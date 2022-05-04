@@ -1,5 +1,11 @@
 # acme-explorer-mobile
-Mobile App for the Mobile Technologies Course.
+Mobile App that helps publishing trips in a simple way.
+Final project for the Mobile Technologies Course.
+Implements some Firebase technologies like Firestore, Storage and Authentication. It also implements Google Maps and the OpenWeather API.
+
+## API Keys
+
+If you'd like to run it locally, you'll need to add a Google Maps api key inside the `local.properties` file as: `MAPS_API_KEY=YOUR_API_KEY`
 
 ## Video
 
