@@ -1,6 +1,6 @@
 package com.gori.acmeexplorer.auth;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.transition.AutoTransition;
@@ -8,6 +8,7 @@ import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 import androidx.transition.TransitionSet;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,10 +34,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.gori.acmeexplorer.MainMenuActivity;
 import com.gori.acmeexplorer.R;
+import com.gori.acmeexplorer.utils.BetterActivityResult;
 
 public class LoginActivity extends AppCompatActivity {
+    protected final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult.registerActivityForResult(this);
 
-    private static final int RC_SIGN_IN = 0x124;
     private GoogleSignInClient googleSignInClient;
 
     private FirebaseAuth mAuth;
@@ -71,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         signInButtonMail.setOnClickListener(l -> attemptLoginEmail());
         registerButton.setOnClickListener(l -> redirectToRegisterActivity());
 
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);
         }
@@ -80,45 +82,37 @@ public class LoginActivity extends AppCompatActivity {
     private void attemptLoginGoogle() {
         hideLoginButton(true);
         Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        activityLauncher.launch(signInIntent, result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Task<GoogleSignInAccount> taskSignIn = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 
-        if(requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> taskSignIn = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    GoogleSignInAccount account = taskSignIn.getResult(ApiException.class);
 
-            try {
-                GoogleSignInAccount account = taskSignIn.getResult(ApiException.class);
-
-                if (account != null) {
-                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-
-                    if(mAuth == null) {
-                        mAuth = FirebaseAuth.getInstance();
+                    if (account != null) {
+                        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                        if (mAuth == null) {
+                            mAuth = FirebaseAuth.getInstance();
+                        }
+                        mAuth.signInWithCredential(credential)
+                                .addOnCompleteListener(this, task -> {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser user = task.getResult().getUser();
+                                        assert user != null;
+                                        checkUserDatabaseLogin(user);
+                                    } else {
+                                        showErrorDialog();
+                                    }
+                                });
+                    } else {
+                        showErrorDialog();
                     }
-
-                    mAuth.signInWithCredential(credential)
-                            .addOnCompleteListener(this, task -> {
-                                if (task.isSuccessful()){
-                                    FirebaseUser user = task.getResult().getUser();
-                                    assert user != null;
-                                    checkUserDatabaseLogin(user);
-                                } else {
-                                    showErrorDialog();
-                                }
-                             });
-
-                }
-                else {
+                } catch (ApiException e) {
                     showErrorDialog();
                 }
-            } catch (ApiException e) {
-                showErrorDialog();
             }
-        }
+        });
     }
 
     private void attemptLoginEmail() {
@@ -156,16 +150,16 @@ public class LoginActivity extends AppCompatActivity {
                             checkUserDatabaseLogin(user);
                         }
                     }).addOnFailureListener(e -> {
-                        if( e instanceof FirebaseAuthInvalidUserException){
-                            Toast.makeText(LoginActivity.this, "This User Not Found , Create A New Account", Toast.LENGTH_SHORT).show();
-                        }
-                        if( e instanceof FirebaseAuthInvalidCredentialsException){
-                            Toast.makeText(LoginActivity.this, "The Password Is Invalid, Please Try Valid Password", Toast.LENGTH_SHORT).show();
-                        }
-                        if(e instanceof FirebaseNetworkException){
-                            Toast.makeText(LoginActivity.this, "Please Check Your Connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (e instanceof FirebaseAuthInvalidUserException) {
+                    Toast.makeText(LoginActivity.this, "This User Not Found , Create A New Account", Toast.LENGTH_SHORT).show();
+                }
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    Toast.makeText(LoginActivity.this, "The Password Is Invalid, Please Try Valid Password", Toast.LENGTH_SHORT).show();
+                }
+                if (e instanceof FirebaseNetworkException) {
+                    Toast.makeText(LoginActivity.this, "Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             showGooglePlayServicesError();
         }
@@ -239,6 +233,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       return;
+        return;
     }
 }
