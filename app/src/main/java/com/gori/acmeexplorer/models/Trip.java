@@ -99,15 +99,6 @@ public class Trip implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isValid() {
-        return (startCity != null &&
-                endCity != null &&
-                price > 0 &&
-                startDate != null &&
-                endDate != null &&
-                imageUrl != null);
-    }
-
     @Override
     public String toString() {
         return "Trip{" +

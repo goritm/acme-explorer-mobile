@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer.trips;
 
+import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
 import static com.gori.acmeexplorer.utils.Utils.parseDate;
 import static com.gori.acmeexplorer.utils.Utils.twoDigits;
 
@@ -7,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.gori.acmeexplorer.R;
@@ -56,17 +59,30 @@ public class AddTripActivity extends AppCompatActivity {
     public void addTrip(View view) {
         String startCity = etStartCity.getText().toString().trim();
         String endCity = etEndCity.getText().toString().trim();
-        Double price = Double.valueOf(etPrice.getText().toString().trim());
+        Double price = etPrice.getText().length() == 0
+                ? 0
+                : Double.parseDouble(etPrice.getText().toString().trim());
         Date startDate = parseDate(etStartDate.getText().toString());
         Date endDate = parseDate(etEndDate.getText().toString());
         String imageUrl = etImageUrl.getText().toString().trim();
 
-        Trip newTrip = new Trip(startCity, endCity, price, startDate, endDate, false, imageUrl);
-
-        if(!newTrip.isValid()){
-            Snackbar.make(etStartCity,  "Debes llenar todos los campos", Snackbar.LENGTH_SHORT).show();
+        if(startCity == "" ||
+                endCity == "" ||
+                price < 0 ||
+                startDate == null ||
+                endDate == null ||
+                imageUrl == ""
+        ){
+            Toast.makeText(this, "Debes llenar todos los campos", Toast.LENGTH_SHORT).show();;
             return;
         }
+
+        if(startDate.compareTo(endDate) > 0) {
+            Toast.makeText(this, "La fecha de fin debe ser luego de la de inicio", Toast.LENGTH_SHORT).show();;
+            return;
+        }
+
+        Trip newTrip = new Trip(startCity, endCity, price, startDate, endDate, false, imageUrl);
 
         firestoreService.saveTrip(newTrip).addOnSuccessListener(documentReference -> {
             Intent returnIntent = new Intent();
