@@ -10,7 +10,6 @@ import androidx.transition.TransitionSet;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -137,32 +136,29 @@ public class LoginActivity extends AppCompatActivity {
             mAuth = FirebaseAuth.getInstance();
         }
 
-        if (mAuth != null) {
-            mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString())
-                    .addOnCompleteListener(this, task -> {
+        mAuth.signInWithEmailAndPassword(loginEmail.getText().toString(), loginPassword.getText().toString())
+                .addOnCompleteListener(this, task -> {
+                    if(task.isSuccessful()){
                         FirebaseUser user = task.getResult().getUser();
+                        assert user != null;
+                        if(!user.isEmailVerified()) showErrorEmailVerified(user);
+                        checkUserDatabaseLogin(user);
+                    } else {
+                        showErrorDialog();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseAuthInvalidUserException) {
+                        Toast.makeText(LoginActivity.this, "This User Not Found , Create A New Account", Toast.LENGTH_SHORT).show();
+                    }
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        Toast.makeText(LoginActivity.this, "The Password Is Invalid, Please Try Valid Password", Toast.LENGTH_SHORT).show();
+                    }
+                    if (e instanceof FirebaseNetworkException) {
+                        Toast.makeText(LoginActivity.this, "Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                        if (!task.isSuccessful() || user == null) {
-                            showErrorDialog();
-                        } else if (!user.isEmailVerified()) {
-                            showErrorEmailVerified(user);
-                        } else {
-                            checkUserDatabaseLogin(user);
-                        }
-                    }).addOnFailureListener(e -> {
-                if (e instanceof FirebaseAuthInvalidUserException) {
-                    Toast.makeText(LoginActivity.this, "This User Not Found , Create A New Account", Toast.LENGTH_SHORT).show();
-                }
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Toast.makeText(LoginActivity.this, "The Password Is Invalid, Please Try Valid Password", Toast.LENGTH_SHORT).show();
-                }
-                if (e instanceof FirebaseNetworkException) {
-                    Toast.makeText(LoginActivity.this, "Please Check Your Connection", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            showGooglePlayServicesError();
-        }
     }
 
     private void checkUserDatabaseLogin(FirebaseUser user) {
@@ -197,16 +193,6 @@ public class LoginActivity extends AppCompatActivity {
         Snackbar.make(signInButtonMail, getString(R.string.login_mail_access_error), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void showGooglePlayServicesError() {
-        Snackbar.make(registerButton, R.string.login_google_play_services_error, Snackbar.LENGTH_LONG).setAction(R.string.login_download_gps, view -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.gps_download_url))));
-            } catch (Exception ex) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.market_download_url))));
-            }
-        });
-    }
-
 
     private void hideLoginButton(boolean hide) {
         TransitionSet transitionSet = new TransitionSet();
@@ -233,6 +219,5 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        return;
     }
 }
