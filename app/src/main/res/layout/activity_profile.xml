@@ -7,18 +7,42 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ProfileActivity">
+    tools:context=".auth.ProfileActivity">
+
+    <ProgressBar
+        android:id="@+id/pb_profilePicture"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PERFIL DEL USUARIO"
+        android:textSize="32sp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="60dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FOTO DE PERFIL"
+        android:textSize="28sp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="15dp"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/iv_takePicture"
         android:src="@drawable/ic_launcher_background"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="40dp"/>
 
     <Button
         android:id="@+id/btn_takePicture"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tomar foto" />
 </LinearLayout>

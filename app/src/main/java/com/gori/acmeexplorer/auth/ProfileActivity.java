@@ -1,4 +1,4 @@
-package com.gori.acmeexplorer;
+package com.gori.acmeexplorer.auth;
 
 import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
 
@@ -19,8 +19,10 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +33,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.gori.acmeexplorer.BuildConfig;
+import com.gori.acmeexplorer.R;
 import com.gori.acmeexplorer.utils.BetterActivityResult;
 
 import java.io.File;
@@ -46,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private Button btn_takePicture;
     private ImageView iv_takePicture;
+    private ProgressBar pb_profilePicture;
 
     private String file;
 
@@ -58,6 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         btn_takePicture = findViewById(R.id.btn_takePicture);
         iv_takePicture = findViewById(R.id.iv_takePicture);
+        pb_profilePicture = findViewById(R.id.pb_profilePicture);
+        pb_profilePicture.setVisibility(View.GONE);
 
         btn_takePicture.setOnClickListener(listener -> checkPermissions());
 
@@ -118,6 +125,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         activityLauncher.launch(cameraIntent, result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
+                pb_profilePicture.setVisibility(View.VISIBLE);
+
                 File filePicture = new File(file);
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageReference = storage.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child(filePicture.getName());
@@ -146,6 +155,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 });
                             }
                         });
+
+                        pb_profilePicture.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(e -> Log.e(LOGGER_NAME, "Firebase Storage Error: " + e.getMessage()));
             }

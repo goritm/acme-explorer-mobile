@@ -1,17 +1,12 @@
 package com.gori.acmeexplorer;
 
-import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -20,10 +15,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gori.acmeexplorer.adapters.MainMenuAdapter;
 import com.gori.acmeexplorer.auth.LoginActivity;
+import com.gori.acmeexplorer.auth.ProfileActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainMenuActivity extends AppCompatActivity {
