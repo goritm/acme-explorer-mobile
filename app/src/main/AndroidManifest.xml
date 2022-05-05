@@ -21,9 +21,6 @@
         android:theme="@style/Theme.AcmeExplorer">
 
         <activity
-            android:name=".maps.LocationActivity"
-            android:exported="false" />
-        <activity
             android:name=".FirebaseStorageActivity"
             android:exported="false" />
         <activity

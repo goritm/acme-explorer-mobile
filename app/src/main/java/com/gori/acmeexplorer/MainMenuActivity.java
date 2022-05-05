@@ -1,22 +1,27 @@
 package com.gori.acmeexplorer;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toolbar;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 import com.gori.acmeexplorer.adapters.MainMenuAdapter;
 import com.gori.acmeexplorer.auth.LoginActivity;
 import com.gori.acmeexplorer.models.MenuItem;
 
 import java.util.ArrayList;
 
-public class MainMenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainMenuActivity extends AppCompatActivity {
     private ArrayList<MenuItem> menuItems;
-    private BottomNavigationView bottomNav;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private MaterialToolbar topAppBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +33,27 @@ public class MainMenuActivity extends AppCompatActivity implements BottomNavigat
         ListView lvMainMenu = findViewById(R.id.lvMainMenu);
         lvMainMenu.setAdapter(adapter);
 
-        bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(this);
-    }
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        topAppBar = findViewById(R.id.topAppBar);
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.page_profile:
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                return true;
+        topAppBar.setNavigationOnClickListener(view -> {
+            drawerLayout.open();
+        });
 
-            case R.id.page_upload:
-                startActivity(new Intent(this, FirebaseStorageActivity.class));
-                return true;
-        }
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch(item.getItemId()){
+                case R.id.page_profile:
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return true;
 
-        return false;
+                case R.id.page_upload:
+                    startActivity(new Intent(this, FirebaseStorageActivity.class));
+                    return true;
+            }
+
+            return false;
+        });
     }
 }
