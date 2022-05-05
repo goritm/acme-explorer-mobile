@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.gori.acmeexplorer.R;
@@ -39,7 +40,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
-    private Button filterButton, addTripButton;
+    private Button filterButton;
+    private FloatingActionButton addTripButton;
     private ProgressBar loadingPB;
 
     private TripsAdapter tripsAdapter;
@@ -55,7 +57,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
-        addTripButton = findViewById(R.id.addTripButton);
+        addTripButton = findViewById(R.id.floating_action_button);
         loadingPB = findViewById(R.id.loadingPB);
 
         tripsAdapter = new TripsAdapter(trips, this);
