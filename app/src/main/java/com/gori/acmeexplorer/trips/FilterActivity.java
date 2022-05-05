@@ -1,78 +1,58 @@
 package com.gori.acmeexplorer.trips;
 
+import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
+import static com.gori.acmeexplorer.utils.Utils.twoDigits;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.gori.acmeexplorer.R;
-
-import java.time.LocalDate;
-import java.util.Calendar;
+import com.gori.acmeexplorer.utils.DatePickerFragment;
 
 public class FilterActivity extends AppCompatActivity {
-
-    Calendar calendar = Calendar.getInstance();
-    int yy = calendar.get(Calendar.YEAR);
-    int mm = calendar.get(Calendar.MONTH);
-    int dd = calendar.get(Calendar.DAY_OF_MONTH);
-
-    String selectedStartDate, selectedEndDate;
-
-    DatePickerDialog datePickerDialog;
-
-    TextView tvFilterStartDate, tvFilterEndDate;
-    EditText editTextMaxPrice, editTextMinPrice;
+    private EditText et_StartDate, et_EndDate, et_MinPrice, et_MaxPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        tvFilterStartDate = findViewById(R.id.tvFilterStartDate);
-        tvFilterEndDate = findViewById(R.id.tvFilterEndDate);
-        editTextMinPrice = findViewById(R.id.editTextMinPrice);
-        editTextMaxPrice = findViewById(R.id.editTextMaxPrice);
+        et_MinPrice = findViewById(R.id.et_MinPrice);
+        et_MaxPrice = findViewById(R.id.et_MaxPrice);
+        et_StartDate = findViewById(R.id.et_StartDate);
+        et_EndDate = findViewById(R.id.et_EndDate);
+
+        et_StartDate.setOnClickListener(view -> {
+            showDatePickerDialog(et_StartDate);
+        });
+
+        et_EndDate.setOnClickListener(view -> {
+            showDatePickerDialog(et_EndDate);
+        });
     }
 
-    public void selectStartDate(View view){
-        datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            selectedStartDate = LocalDate.of(year, month + 1, day).toString();
-            tvFilterStartDate.setText(selectedStartDate);
-            yy = year;
-            mm = month;
-            dd = day;
-        }, yy, mm, dd);
-
-        datePickerDialog.show();
+    private void showDatePickerDialog(EditText editText) {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
+            final String selectedDate = twoDigits(day) + "-" + twoDigits(month + 1) + "-" + year;
+            editText.setText(selectedDate);
+        });
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    public void selectEndDate(View view){
-        datePickerDialog = new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            selectedEndDate = LocalDate.of(year, month + 1, day).toString();
-            tvFilterEndDate.setText(selectedEndDate);
-            yy = year;
-            mm = month;
-            dd = day;
-        }, yy, mm, dd);
-
-        datePickerDialog.show();
-    }
-
-    public void sendData(View view) {
+    public void filterTrips(View view) {
         Intent intent = new Intent();
 
-        intent.putExtra("filterMinDate", selectedStartDate);
-        intent.putExtra("filterMaxDate", selectedEndDate);
-        intent.putExtra("filterMinPrice", editTextMinPrice.getText().toString());
-        intent.putExtra("filterMaxPrice", editTextMaxPrice.getText().toString());
+        intent.putExtra("filterMinPrice", et_MinPrice.getText().toString());
+        intent.putExtra("filterMaxPrice", et_MaxPrice.getText().toString());
+        intent.putExtra("filterMinDate", et_StartDate.getText().toString());
+        intent.putExtra("filterMaxDate", et_EndDate.getText().toString());
 
-        setResult(Activity.RESULT_OK, intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

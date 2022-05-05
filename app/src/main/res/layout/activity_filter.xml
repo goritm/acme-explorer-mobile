@@ -21,151 +21,77 @@
             android:layout_height="wrap_content"
             android:text="FILTROS"
             android:textSize="40sp"
+            android:layout_marginBottom="10sp"
             android:gravity="center_horizontal"
             android:textColor="@color/black"
             android:textStyle="bold"/>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_MinPrice"
+            android:layout_marginBottom="10sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Fecha de inicio:"
-                android:layout_weight="0.60"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-            <TextView
-                android:id="@+id/tvFilterStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.30"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-            <ImageView
-                android:layout_weight="0.10"
-                android:id="@+id/ivCalendarStartDate"
-                android:layout_width="30dp"
-                android:layout_height="63dp"
-                android:onClick="selectStartDate"
-                app:srcCompat="@drawable/ic_calendar"
-                android:gravity="end"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Fecha de fin:"
-                android:layout_weight="0.60"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-            <TextView
-                android:id="@+id/tvFilterEndDate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.30"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-            <ImageView
-                android:layout_weight="0.10"
-                android:id="@+id/ivCalendarEndDate"
-                android:layout_width="30dp"
-                android:layout_height="63dp"
-                android:onClick="selectEndDate"
-                app:srcCompat="@drawable/ic_calendar"
-                android:gravity="end"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Precio mínimo:"
-                android:textColor="@color/black"
-                android:layout_weight="0.60"
-                android:textSize="24sp"
-                android:gravity="center_vertical"/>
-
+            android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextMinPrice"
-                android:layout_width="wrap_content"
+                android:id="@+id/et_MinPrice"
+                android:hint="Precio mínimo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.60"
-                android:textColor="@color/black"
-                android:backgroundTint="#f9f9f9"
-                android:inputType="number" />
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="€"
-                android:layout_weight="0.05"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_MaxPrice"
+            android:layout_marginBottom="10sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Precio máximo:"
-                android:textColor="@color/black"
-                android:layout_weight="0.60"
-                android:textSize="24sp"
-                android:gravity="center_vertical"/>
-
+            android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextMaxPrice"
-                android:layout_width="wrap_content"
+                android:id="@+id/et_MaxPrice"
+                android:hint="Precio máximo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.35"
-                android:textColor="@color/black"
-                android:backgroundTint="#f9f9f9"
-                android:inputType="number" />
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="€"
-                android:layout_weight="0.05"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_StartDate"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_StartDate"
+                android:hint="Fecha de inicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:focusable="false"
+                android:clickable="true"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_EndDate"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_EndDate"
+                android:hint="Fecha de fin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:focusable="false"
+                android:clickable="true"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnFilterTrips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Buscar"
-            android:onClick="sendData"/>
-
+            android:text="Filtrar"
+            android:onClick="filterTrips"/>
 
     </LinearLayout>
 

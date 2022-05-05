@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.gori.acmeexplorer.models.Trip;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class FirestoreService {
     private static String userId;
@@ -45,20 +46,17 @@ public class FirestoreService {
 
     public Task<QuerySnapshot> getSelectedTrips() {
         Query query = mDatabase.collection("users").document(userId).collection("trips");
-
         query = query.whereEqualTo("isSelected", true);
-
         return query.get();
     }
 
-    public Task<QuerySnapshot> getFilteredTrips(ArrayList<Filter> filters) {
+    public Task<QuerySnapshot> getFilteredTrips(Double minPrice, Double maxPrice, Date minDate, Date maxDate) {
         Query query = mDatabase.collection("users").document(userId).collection("trips");
 
-        query = query.orderBy("endCity").limit(3);
-//        if(filters.size() > 0){
-//            if(filters.get(0))
-//            query = query.whereGreaterThanOrEqualTo("minPrice", filters.get())
-//        }
+        if (minPrice != -1) query = query.whereGreaterThanOrEqualTo("price", minPrice);
+        if (maxPrice != -1) query = query.whereLessThanOrEqualTo("price", maxPrice);
+        if (minDate != null) query = query.whereGreaterThanOrEqualTo("startDate", minDate);
+        if (maxDate != null) query = query.whereLessThanOrEqualTo("endDate", maxDate);
 
         return query.get();
     }

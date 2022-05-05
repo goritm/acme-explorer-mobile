@@ -1,5 +1,6 @@
 package com.gori.acmeexplorer.trips;
 
+import static com.gori.acmeexplorer.utils.Utils.LOGGER_NAME;
 import static com.gori.acmeexplorer.utils.Utils.parseDate;
 
 import androidx.activity.result.ActivityResult;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -37,10 +39,9 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private GridLayoutManager gridLayoutManager;
 
     private ArrayList<Trip> trips = new ArrayList<>();
-    private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
-    private Button filterButton;
+    private Button filterButton, btn_resetFilters;
     private FloatingActionButton addTripButton;
     private ProgressBar loadingPB;
 
@@ -57,6 +58,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
+        btn_resetFilters = findViewById(R.id.btn_resetFilters);
         addTripButton = findViewById(R.id.floating_action_button);
         loadingPB = findViewById(R.id.loadingPB);
 
@@ -75,6 +77,10 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
         filterButton.setOnClickListener(view -> filterTrips());
         addTripButton.setOnClickListener(view -> addTrip());
+        btn_resetFilters.setOnClickListener(view -> {
+            loadTrips();
+            btn_resetFilters.setVisibility(View.GONE);
+        });
 
         loadTrips();
     }
@@ -106,7 +112,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             // trips = (ArrayList<Trip>) queryDocumentSnapshots.toObjects(Trip.class);
             // We manually add the id to allow trip modification
             List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
-            for(DocumentSnapshot snapshot: documentSnapshotList){
+            for (DocumentSnapshot snapshot : documentSnapshotList) {
                 Trip trip = snapshot.toObject(Trip.class);
                 trip.setId(snapshot.getId());
                 trips.add(trip);
@@ -121,7 +127,7 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     public void addTrip() {
         Intent intent = new Intent(this, AddTripActivity.class);
         activityLauncher.launch(intent, result -> {
-            if(result.getResultCode() == Activity.RESULT_OK){
+            if (result.getResultCode() == Activity.RESULT_OK) {
                 String documentId = result.getData().getStringExtra("documentReference");
                 Snackbar.make(rvTripList, "Trip " + documentId + " added successfully!", Snackbar.LENGTH_SHORT).show();
                 loadTrips();
@@ -132,36 +138,38 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     public void filterTrips() {
         Intent intent = new Intent(this, FilterActivity.class);
         activityLauncher.launch(intent, result -> {
-            if(result.getResultCode() == Activity.RESULT_OK) {
+            if (result.getResultCode() == Activity.RESULT_OK) {
                 Intent data = result.getData();
 
-                Double filterMinPrice = Double.parseDouble(data.getStringExtra("filterMinPrice"));
-                Double filterMaxPrice = Double.parseDouble(data.getStringExtra("filterMaxPrice"));
+                Double filterMinPrice =
+                        data.getStringExtra("filterMinPrice").length() == 0
+                        ? -1
+                        : Double.valueOf(data.getStringExtra("filterMinPrice"));
+                Double filterMaxPrice = data.getStringExtra("filterMaxPrice").length() == 0
+                        ? -1
+                        : Double.valueOf(data.getStringExtra("filterMaxPrice"));
                 Date filterMinDate = parseDate(data.getStringExtra("filterMinDate"));
                 Date filterMaxDate = parseDate(data.getStringExtra("filterMaxDate"));
 
-                for (int i = 0; i < trips.size(); i++) {
-                    Trip trip = trips.get(i);
+                loadingPB.setVisibility(View.VISIBLE);
 
-                    Boolean validMinPrice = trip.getPrice() >= filterMinPrice;
-                    Boolean validMaxPrice = trip.getPrice() <= filterMaxPrice;
-
-                    Boolean validStartDate = trip.getStartDate().compareTo(filterMinDate) > 0 || trip.getStartDate().compareTo(filterMinDate) == 0;
-                    Boolean validEndDate = trip.getStartDate().compareTo(filterMaxDate) < 0 || trip.getStartDate().compareTo(filterMaxDate) == 0;
-
-                    if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {
-                        filteredTrips.add(trip);
-                    }
+                firestoreService.getFilteredTrips(filterMinPrice, filterMaxPrice, filterMinDate, filterMaxDate)
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            trips.clear();
+                            List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot snapshot : documentSnapshotList) {
+                                Trip trip = snapshot.toObject(Trip.class);
+                                trip.setId(snapshot.getId());
+                                trips.add(trip);
+                            }
+                            loadingPB.setVisibility(View.GONE);
+                            btn_resetFilters.setVisibility(View.VISIBLE);
+                            tripsAdapter.notifyDataSetChanged();
+                        })
+                        .addOnFailureListener(e -> {
+                            Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                        });
                 }
-
-                if (filteredTrips.size() > 0) {
-                    trips.clear();
-                    trips.addAll(filteredTrips);
-                    tripsAdapter.notifyDataSetChanged();
-                } else {
-                    Snackbar.make(rvTripList, "No se encontraron viajes con los filtros seleccionados", Snackbar.LENGTH_SHORT).show();
-                }
-            }
         });
     }
 }
