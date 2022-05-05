@@ -25,5 +25,4 @@
         android:textColor="@color/material_on_surface_emphasis_medium"
         android:text="Manage your trips, easily" />
 
-
 </LinearLayout>

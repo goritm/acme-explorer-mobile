@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".FirebaseStorageActivity">
+    tools:context=".ProfileActivity">
 
     <ImageView
         android:id="@+id/iv_takePicture"

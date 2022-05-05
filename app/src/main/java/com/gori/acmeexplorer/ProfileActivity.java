@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -34,11 +36,13 @@ import com.gori.acmeexplorer.utils.BetterActivityResult;
 import java.io.File;
 import java.util.Calendar;
 
-public class FirebaseStorageActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
     protected final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult.registerActivityForResult(this);
 
     private static final int CAMERA_PERMISSION_REQUEST = 0x234;
     private static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 0x235;
+
+    private FirebaseUser user;
 
     private Button btn_takePicture;
     private ImageView iv_takePicture;
@@ -48,12 +52,22 @@ public class FirebaseStorageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_firebase_storage);
+        setContentView(R.layout.activity_profile);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         btn_takePicture = findViewById(R.id.btn_takePicture);
         iv_takePicture = findViewById(R.id.iv_takePicture);
 
         btn_takePicture.setOnClickListener(listener -> checkPermissions());
+
+        if (user != null && user.getPhotoUrl() != null) {
+            Glide.with(ProfileActivity.this)
+                    .load(user.getPhotoUrl())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .centerCrop()
+                    .into(iv_takePicture);
+        }
     }
 
     private void checkPermissions() {
@@ -115,11 +129,21 @@ public class FirebaseStorageActivity extends AppCompatActivity {
 
                         storageReference.getDownloadUrl().addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
-                                Glide.with(FirebaseStorageActivity.this)
+                                Glide.with(ProfileActivity.this)
                                         .load(task2.getResult())
                                         .placeholder(R.drawable.ic_launcher_background)
                                         .centerCrop()
                                         .into(iv_takePicture);
+
+                                UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest
+                                        .Builder()
+                                        .setPhotoUri(task2.getResult()).build();
+
+                                user.updateProfile(profileUpdate).addOnCompleteListener(task3 -> {
+                                    if(task3.isSuccessful()){
+                                        Log.d(LOGGER_NAME, "Updated photo!");
+                                    }
+                                });
                             }
                         });
                     }

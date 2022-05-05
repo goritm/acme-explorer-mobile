@@ -4,12 +4,11 @@
         android:id="@+id/group1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/item1"
+            android:id="@+id/menuItem_Profile"
             android:icon="@drawable/ic_auth"
-            android:title="Perfil"
-            android:checked="true" />
+            android:title="Perfil" />
         <item
-            android:id="@+id/item2"
+            android:id="@+id/menuItem_Logout"
             android:title="Logout" />
     </group>
 </menu>

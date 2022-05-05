@@ -236,4 +236,9 @@ public class LoginActivity extends AppCompatActivity {
             loginPasswordParent.setEnabled(true);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+       return;
+    }
 }
